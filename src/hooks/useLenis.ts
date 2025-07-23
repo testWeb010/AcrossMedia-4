@@ -41,3 +41,4 @@ export const startLenis = () => {
 export const scrollTo = (target: string | number, options?: any) => {
   lenisInstance?.scrollTo(target, options);
 };
+

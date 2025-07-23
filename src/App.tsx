@@ -39,7 +39,7 @@ const AppContent = () => {
         <Route path="/signup" element={<Signup />} />
         <Route path="/forgot-password" element={<ForgotPassword />} />
         <Route path="/pending-approval" element={<PendingApproval />} />
-        <Route path="/admin" element={
+        <Route path="/acs-admin" element={
           <ProtectedRoute>
             <AdminPanel />
           </ProtectedRoute>
@@ -60,3 +60,4 @@ function App() {
 }
 
 export default App;
+

@@ -1,7 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 
-
 const PendingApproval: React.FC = () => {
   const navigate = useNavigate();
   const [accessDenied, setAccessDenied] = useState(false);

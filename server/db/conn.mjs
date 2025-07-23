@@ -1,6 +1,7 @@
 import mongoose from 'mongoose';
 import "dotenv/config";
 
+
 const connectionString = process.env.ATLAS_URI + 'across-media?retryWrites=true&w=majority';
 
 let dbInstance;

@@ -71,24 +71,7 @@ const Hero = () => {
               </button>
             </div>
 
-            {/* <div className="grid grid-cols-2 sm:grid-cols-4 gap-8 pt-12">
-              <div className="text-center group">
-                <div className="text-3xl font-bold bg-gradient-to-r from-cyan-400 to-pink-500 bg-clip-text text-transparent group-hover:scale-110 transition-transform">500+</div>
-                <div className="text-sm text-gray-400 mt-1">Projects</div>
-              </div>
-              <div className="text-center group">
-                <div className="text-3xl font-bold bg-gradient-to-r from-cyan-400 to-pink-500 bg-clip-text text-transparent group-hover:scale-110 transition-transform">100+</div>
-                <div className="text-sm text-gray-400 mt-1">Celebrities</div>
-              </div>
-              <div className="text-center group">
-                <div className="text-3xl font-bold bg-gradient-to-r from-cyan-400 to-pink-500 bg-clip-text text-transparent group-hover:scale-110 transition-transform">50+</div>
-                <div className="text-sm text-gray-400 mt-1">Brands</div>
-              </div>
-              <div className="text-center group">
-                <div className="text-3xl font-bold bg-gradient-to-r from-cyan-400 to-pink-500 bg-clip-text text-transparent group-hover:scale-110 transition-transform">5+</div>
-                <div className="text-sm text-gray-400 mt-1">Years</div>
-              </div>
-            </div> */}
+          
           </div>
 
           <div className="relative group">
@@ -126,3 +109,4 @@ const Hero = () => {
 };
 
 export default Hero;
+

@@ -4,6 +4,7 @@ import { apiRequestJson } from '../../utils/api';
 import { toast } from 'sonner';
 import AuthenticatedWrapper from './AuthenticatedWrapper';
 
+
 interface SiteSettings {
   _id?: string;
   type: string;

@@ -17,6 +17,7 @@ interface SecurityIndicator {
   message: string;
 }
 
+
 const SecureLogin: React.FC = () => {
   // Form state
   const [username, setUsername] = useState('');

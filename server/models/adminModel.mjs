@@ -52,3 +52,4 @@ AdminSchema.pre('save', function(next) {
 const Admin = mongoose.model('admins', AdminSchema);
 
 export default Admin;
+

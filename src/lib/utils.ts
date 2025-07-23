@@ -37,3 +37,5 @@ export function formatTimeAgo(dateString: string): string {
   }
   return `${Math.floor(seconds)} second${seconds !== 1 ? 's' : ''} ago`;
 }
+
+

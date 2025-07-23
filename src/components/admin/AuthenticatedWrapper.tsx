@@ -2,6 +2,7 @@ import React from 'react';
 import { AlertCircle, Loader2 } from 'lucide-react';
 import { useAuthToken } from '../../hooks/useAuthToken';
 
+
 interface AuthenticatedWrapperProps {
   children: React.ReactNode;
   themeClasses?: {

@@ -289,3 +289,4 @@ const IPDetail = () => {
 };
 
 export default IPDetail;
+

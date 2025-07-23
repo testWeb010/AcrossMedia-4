@@ -4,6 +4,7 @@ import slowDown from 'express-slow-down';
 import { body, validationResult } from 'express-validator';
 import validator from 'validator';
 
+
 // Security Headers Middleware - Protects against XSS, clickjacking, and other attacks
 export const securityHeaders = helmet({
   contentSecurityPolicy: {

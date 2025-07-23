@@ -8,7 +8,6 @@ export interface YouTubeVideoData {
   channelTitle: string;
 }
 
-
 export const extractVideoId = (url: string): string | null => {
   const patterns = [
     /(?:youtube\.com\/watch\?v=|youtu\.be\/|youtube\.com\/embed\/)([^&\n?#]+)/,

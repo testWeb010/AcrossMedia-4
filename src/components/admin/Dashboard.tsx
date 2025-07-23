@@ -3,6 +3,7 @@ import { Video, Image, Eye, Heart, TrendingUp, Calendar, Users, BarChart3 } from
 import { apiRequestJson } from '../../utils/api';
 import AuthenticatedWrapper from './AuthenticatedWrapper';
 
+
 interface DashboardData {
   totalVideos: number;
   totalProjects: number;

@@ -2,7 +2,6 @@ import express from 'express';
 import jwt from 'jsonwebtoken';
 import { getDb } from "../db/conn.mjs";
 
-
 const router = express.Router();
 const JWT_SECRET = process.env.JWT_SECRET;
 

@@ -6,8 +6,6 @@ import Portfolio from '@/components/Portfolio';
 import IPShowcase from '@/components/IPShowcase';
 import Contact from '@/components/Contact';
 
-
-
 const Index = () => {
   return (
     <div className="min-h-screen bg-black text-white">

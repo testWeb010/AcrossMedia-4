@@ -212,3 +212,5 @@ const getStoredSecurityEvents = (): SecurityEvent[] => {
 
 // Export for use in components
 export default useSecurityMonitoring;
+
+
