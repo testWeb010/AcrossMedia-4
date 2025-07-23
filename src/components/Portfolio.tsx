@@ -96,14 +96,25 @@ const Portfolio = () => {
         
         <h3 className="text-4xl lg:text-5xl font-bold mb-6">
           <span className="bg-gradient-to-r from-white to-gray-300 bg-clip-text text-transparent">
-            Amazing Projects Loading
+            50+ Brands Trust Us
           </span>
         </h3>
         
         <p className="text-xl text-gray-400 leading-relaxed mb-8">
-          We're preparing our showcase of extraordinary projects and innovative media solutions. 
-          Our portfolio of groundbreaking campaigns and strategic partnerships will be available soon.
+          We've partnered with industry leaders and innovative startups to deliver exceptional results. 
+          Here are just some of the amazing brands we've had the privilege to work with.
         </p>
+        
+        {/* Brand Logos Collage */}
+        <div className="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-6 gap-8 mt-12 opacity-60">
+          {[...Array(12)].map((_, index) => (
+            <div key={index} className="aspect-square bg-gradient-to-br from-gray-800 to-gray-700 rounded-2xl flex items-center justify-center border border-gray-600 hover:border-primary/30 transition-all group">
+              <div className="text-gray-400 group-hover:text-primary transition-colors text-xs font-medium">
+                BRAND {index + 1}
+              </div>
+            </div>
+          ))}
+        </div>
 
         <div className="flex justify-center gap-4">
           <div className="w-3 h-3 bg-cyan-400 rounded-full animate-bounce" style={{ animationDelay: '0ms' }}></div>

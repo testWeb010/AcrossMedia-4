@@ -5,6 +5,7 @@ import About from './components/About';
 import Contact from './components/Contact';
 import Videos from './pages/Videos';
 import Projects from './pages/Projects';
+import Team from './pages/Team';
 import IPDetail from './pages/IPDetail';
 import AdminPanel from './components/admin/AdminPanel';
 import Login from './components/auth/Login';
@@ -32,6 +33,7 @@ const AppContent = () => {
         <Route path="/" element={<Index />} />
         <Route path="/videos" element={<Videos />} />
         <Route path="/projects" element={<Projects />} />
+        <Route path="/team" element={<Team />} />
         <Route path="/about" element={<About />} />
         <Route path="/contact" element={<Contact />} />
         <Route path="/ip/:id" element={<IPDetail />} />

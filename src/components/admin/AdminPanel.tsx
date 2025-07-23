@@ -88,9 +88,7 @@ const AdminPanel = () => {
               <div className={`w-8 h-8 rounded-full bg-gradient-to-r from-cyan-500 to-pink-600 flex items-center justify-center`}>
                 <Users size={16} className="text-white" />
               </div>
-              <div className="flex justify-end mb-4">
-                <LogoutButton />
-              </div>
+              <LogoutButton />
             </div>
           </div>
         </div>

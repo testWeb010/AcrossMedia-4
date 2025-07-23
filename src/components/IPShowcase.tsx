@@ -8,6 +8,7 @@ interface IP {
   title: string;
   description: string;
   thumbnail: string;
+  videoUrl?: string;
   category: string;
   views: string;
   releaseDate: string;
@@ -28,6 +29,7 @@ const IPShowcase = () => {
         title: 'The Future Chronicles',
         description: 'A groundbreaking sci-fi series exploring humanity\'s next chapter',
         thumbnail: 'https://images.unsplash.com/photo-1518640467707-6811f4a6ab73?w=800&h=600&fit=crop',
+        videoUrl: 'https://www.youtube.com/embed/dQw4w9WgXcQ',
         category: 'Series',
         views: '2.5M',
         releaseDate: '2024-03-15',
@@ -38,6 +40,7 @@ const IPShowcase = () => {
         title: 'Celebrity Chef Masters',
         description: 'Top chefs compete in the ultimate culinary showdown',
         thumbnail: 'https://images.unsplash.com/photo-1556909114-4f6e8cda40a3?w=800&h=600&fit=crop',
+        videoUrl: 'https://www.youtube.com/embed/dQw4w9WgXcQ',
         category: 'Reality Show',
         views: '1.8M',
         releaseDate: '2024-04-20',
@@ -48,6 +51,7 @@ const IPShowcase = () => {
         title: 'Digital Nomad Stories',
         description: 'Documentary series following remote workers around the globe',
         thumbnail: 'https://images.unsplash.com/photo-1488190211105-8b0e65b80b4e?w=800&h=600&fit=crop',
+        videoUrl: 'https://www.youtube.com/embed/dQw4w9WgXcQ',
         category: 'Documentary',
         views: '950K',
         releaseDate: '2024-02-10',
@@ -58,6 +62,7 @@ const IPShowcase = () => {
         title: 'Startup Revolution',
         description: 'Inside the world of tech entrepreneurs and innovation',
         thumbnail: 'https://images.unsplash.com/photo-1559136555-9303baea8ebd?w=800&h=600&fit=crop',
+        videoUrl: 'https://www.youtube.com/embed/dQw4w9WgXcQ',
         category: 'Business',
         views: '1.2M',
         releaseDate: '2024-05-01',
@@ -68,10 +73,44 @@ const IPShowcase = () => {
         title: 'Music Legends Live',
         description: 'Exclusive performances from the biggest names in music',
         thumbnail: 'https://images.unsplash.com/photo-1493225457124-a3eb161ffa5f?w=800&h=600&fit=crop',
+        videoUrl: 'https://www.youtube.com/embed/dQw4w9WgXcQ',
         category: 'Music',
         views: '3.1M',
         releaseDate: '2024-01-25',
         status: 'active'
+      },
+      {
+        id: '6',
+        title: 'Tech Innovators',
+        description: 'Meet the minds behind tomorrow\'s technology',
+        thumbnail: 'https://images.unsplash.com/photo-1581092795360-fd1ca04f0952?w=800&h=600&fit=crop',
+        videoUrl: 'https://www.youtube.com/embed/dQw4w9WgXcQ',
+        category: 'Technology',
+        views: '2.1M',
+        releaseDate: '2024-06-10',
+        status: 'active'
+      },
+      {
+        id: '7',
+        title: 'Nature\'s Wonders',
+        description: 'Explore the most breathtaking landscapes on Earth',
+        thumbnail: 'https://images.unsplash.com/photo-1506905925346-21bda4d32df4?w=800&h=600&fit=crop',
+        videoUrl: 'https://www.youtube.com/embed/dQw4w9WgXcQ',
+        category: 'Nature',
+        views: '1.7M',
+        releaseDate: '2024-07-15',
+        status: 'active'
+      },
+      {
+        id: '8',
+        title: 'Urban Legends',
+        description: 'Investigating mysterious stories from around the world',
+        thumbnail: 'https://images.unsplash.com/photo-1519389950473-47ba0277781c?w=800&h=600&fit=crop',
+        videoUrl: 'https://www.youtube.com/embed/dQw4w9WgXcQ',
+        category: 'Mystery',
+        views: '1.4M',
+        releaseDate: '2024-08-20',
+        status: 'upcoming'
       }
     ];
 
@@ -252,39 +291,56 @@ const IPShowcase = () => {
           </div>
         </div>
 
-        {/* Thumbnail Navigation */}
-        <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-4">
-          {ips.map((ip, index) => (
-            <motion.div
-              key={ip.id}
-              className={`relative aspect-video rounded-xl overflow-hidden cursor-pointer border-2 transition-all ${
-                index === currentSlide 
-                  ? 'border-primary shadow-lg shadow-primary/25' 
-                  : 'border-gray-700 hover:border-gray-500'
-              }`}
-              onClick={() => {
-                setCurrentSlide(index);
-                handleIPClick(ip);
-              }}
-              whileHover={{ scale: 1.05 }}
-              transition={{ duration: 0.2 }}
-            >
-              <img
-                src={ip.thumbnail}
-                alt={ip.title}
-                className="w-full h-full object-cover"
-              />
-              <div className="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent"></div>
-              <div className="absolute bottom-2 left-2 right-2">
-                <h4 className="text-white text-sm font-semibold truncate">
-                  {ip.title}
-                </h4>
-                <p className="text-gray-300 text-xs truncate">
-                  {ip.category}
-                </p>
-              </div>
-            </motion.div>
-          ))}
+        {/* Horizontal Scrolling Thumbnail Navigation */}
+        <div className="relative">
+          <div className="overflow-x-auto pb-4 scrollbar-hide">
+            <div className="flex gap-4 min-w-max">
+              {ips.map((ip, index) => (
+                <motion.div
+                  key={ip.id}
+                  className={`relative aspect-video w-80 rounded-xl overflow-hidden cursor-pointer border-2 transition-all flex-shrink-0 ${
+                    index === currentSlide 
+                      ? 'border-primary shadow-lg shadow-primary/25' 
+                      : 'border-gray-700 hover:border-gray-500'
+                  }`}
+                  onClick={() => {
+                    setCurrentSlide(index);
+                    handleIPClick(ip);
+                  }}
+                  whileHover={{ scale: 1.05 }}
+                  transition={{ duration: 0.2 }}
+                >
+                  <img
+                    src={ip.thumbnail}
+                    alt={ip.title}
+                    className="w-full h-full object-cover"
+                  />
+                  <div className="absolute inset-0 bg-gradient-to-t from-black/80 to-transparent"></div>
+                  
+                  {/* Play Button Overlay */}
+                  <div className="absolute inset-0 flex items-center justify-center opacity-0 hover:opacity-100 transition-opacity">
+                    <div className="w-16 h-16 bg-white/10 backdrop-blur-md border border-white/20 rounded-full flex items-center justify-center">
+                      <Play size={24} className="text-white ml-1" fill="white" />
+                    </div>
+                  </div>
+
+                  <div className="absolute bottom-3 left-3 right-3">
+                    <h4 className="text-white text-sm font-semibold truncate mb-1">
+                      {ip.title}
+                    </h4>
+                    <p className="text-gray-300 text-xs truncate">
+                      {ip.category}
+                    </p>
+                  </div>
+                </motion.div>
+              ))}
+            </div>
+          </div>
+          
+          {/* Scroll indicators */}
+          <div className="absolute right-0 top-1/2 transform -translate-y-1/2 text-gray-400 text-sm">
+            <span>Scroll →</span>
+          </div>
         </div>
       </div>
     </section>

@@ -153,7 +153,7 @@ const ProjectManagement = ({ isDarkMode, themeClasses }: { isDarkMode: boolean; 
     return matchesSearch && matchesCategory;
   }) : [];
 
-  const categories = ['Branded Content', 'Celebrity Engagement', 'Sponsorships', 'Intellectual Properties'];
+  const categories = ['Branded Content', 'Celebrity Engagement', 'Sponsorships', 'Intellectual Properties', 'Digital Marketing Solutions'];
 
   return (
     <AuthenticatedWrapper themeClasses={themeClasses}>
@@ -192,58 +192,29 @@ const ProjectManagement = ({ isDarkMode, themeClasses }: { isDarkMode: boolean; 
           </div>
           
           <form onSubmit={handleSubmit} className="space-y-6">
-            <div className="grid md:grid-cols-2 gap-6">
-              <div>
-                <label className={`block text-sm font-semibold ${themeClasses.text} mb-2`}>Project Title</label>
-                <input
-                  type="text"
-                  value={formData.title}
-                  onChange={(e) => setFormData({...formData, title: e.target.value})}
-                  className={`w-full px-4 py-3 ${themeClasses.cardBg} ${themeClasses.border} border rounded-xl ${themeClasses.text} focus:ring-2 focus:ring-cyan-500 focus:border-transparent transition-all`}
-                  placeholder="Enter project title"
-                  required
-                />
-              </div>
-              
-              <div>
-                <label className={`block text-sm font-semibold ${themeClasses.text} mb-2`}>Client</label>
-                <input
-                  type="text"
-                  value={formData.client}
-                  onChange={(e) => setFormData({...formData, client: e.target.value})}
-                  className={`w-full px-4 py-3 ${themeClasses.cardBg} ${themeClasses.border} border rounded-xl ${themeClasses.text} focus:ring-2 focus:ring-cyan-500 focus:border-transparent transition-all`}
-                  placeholder="Enter client name"
-                  required
-                />
-              </div>
+            <div>
+              <label className={`block text-sm font-semibold ${themeClasses.text} mb-2`}>Project Title</label>
+              <input
+                type="text"
+                value={formData.title}
+                onChange={(e) => setFormData({...formData, title: e.target.value})}
+                className={`w-full px-4 py-3 ${themeClasses.cardBg} ${themeClasses.border} border rounded-xl ${themeClasses.text} focus:ring-2 focus:ring-cyan-500 focus:border-transparent transition-all`}
+                placeholder="Enter project title"
+                required
+              />
             </div>
 
-            <div className="grid md:grid-cols-2 gap-6">
-              <div>
-                <label className={`block text-sm font-semibold ${themeClasses.text} mb-2`}>Category</label>
-                <select
-                  value={formData.category}
-                  onChange={(e) => setFormData({...formData, category: e.target.value})}
-                  className={`w-full px-4 py-3 ${themeClasses.cardBg} ${themeClasses.border} border rounded-xl ${themeClasses.text} focus:ring-2 focus:ring-cyan-500 focus:border-transparent transition-all`}
-                >
-                  {categories.map(category => (
-                    <option key={category} value={category}>{category}</option>
-                  ))}
-                </select>
-              </div>
-              
-              <div>
-                <label className={`block text-sm font-semibold ${themeClasses.text} mb-2`}>Status</label>
-                <select
-                  value={formData.status}
-                  onChange={(e) => setFormData({...formData, status: e.target.value})}
-                  className={`w-full px-4 py-3 ${themeClasses.cardBg} ${themeClasses.border} border rounded-xl ${themeClasses.text} focus:ring-2 focus:ring-cyan-500 focus:border-transparent transition-all`}
-                >
-                  <option value="completed">Completed</option>
-                  <option value="ongoing">Ongoing</option>
-                  <option value="upcoming">Upcoming</option>
-                </select>
-              </div>
+            <div>
+              <label className={`block text-sm font-semibold ${themeClasses.text} mb-2`}>Category</label>
+              <select
+                value={formData.category}
+                onChange={(e) => setFormData({...formData, category: e.target.value})}
+                className={`w-full px-4 py-3 ${themeClasses.cardBg} ${themeClasses.border} border rounded-xl ${themeClasses.text} focus:ring-2 focus:ring-cyan-500 focus:border-transparent transition-all`}
+              >
+                {categories.map(category => (
+                  <option key={category} value={category}>{category}</option>
+                ))}
+              </select>
             </div>
 
             <div>
@@ -384,10 +355,10 @@ const ProjectManagement = ({ isDarkMode, themeClasses }: { isDarkMode: boolean; 
                   </div>
                 </div>
                 
-                {/* Status badge */}
+                {/* Category badge */}
                 <div className="absolute top-3 right-3">
                   <div className={`bg-gradient-to-r from-green-500 to-emerald-600 px-3 py-1 rounded-full`}>
-                    <span className="text-white text-xs font-semibold capitalize">{project.status}</span>
+                    <span className="text-white text-xs font-semibold">{project.category}</span>
                   </div>
                 </div>
               </div>
@@ -397,7 +368,7 @@ const ProjectManagement = ({ isDarkMode, themeClasses }: { isDarkMode: boolean; 
                   {project.title}
                 </h3>
                 
-                <p className="text-sm text-cyan-400 mb-2 font-medium">{project.client}</p>
+                
                 
                 <p className={`${themeClasses.textSecondary} text-sm mb-4 line-clamp-2`}>
                   {project.description}

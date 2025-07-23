@@ -10,6 +10,7 @@ interface IP {
   title: string;
   description: string;
   thumbnail: string;
+  videoUrl?: string;
   category: string;
   views: string;
   releaseDate: string;
@@ -144,141 +145,53 @@ const IPDetail = () => {
                 transition={{ duration: 0.8, delay: 0.2 }}
               >
                 <div className="relative bg-gradient-to-br from-gray-800 to-gray-900 rounded-3xl overflow-hidden border border-gray-700 aspect-video">
-                  <img
-                    src={ip.thumbnail}
-                    alt={ip.title}
-                    className="w-full h-full object-cover"
-                  />
-                  <div className="absolute inset-0 bg-black/20"></div>
-                  <div className="absolute inset-0 flex items-center justify-center">
-                    <div className="w-24 h-24 bg-white/10 backdrop-blur-md border border-white/20 rounded-full flex items-center justify-center cursor-pointer hover:scale-110 transition-all duration-300">
-                      <Play size={40} className="text-white ml-2" fill="white" />
-                    </div>
-                  </div>
+                  {ip.videoUrl ? (
+                    <iframe
+                      src={ip.videoUrl}
+                      title={ip.title}
+                      className="w-full h-full"
+                      allowFullScreen
+                    />
+                  ) : (
+                    <>
+                      <img
+                        src={ip.thumbnail}
+                        alt={ip.title}
+                        className="w-full h-full object-cover"
+                      />
+                      <div className="absolute inset-0 bg-black/20"></div>
+                      <div className="absolute inset-0 flex items-center justify-center">
+                        <div className="w-24 h-24 bg-white/10 backdrop-blur-md border border-white/20 rounded-full flex items-center justify-center cursor-pointer hover:scale-110 transition-all duration-300">
+                          <Play size={40} className="text-white ml-2" fill="white" />
+                        </div>
+                      </div>
+                    </>
+                  )}
                 </div>
               </motion.div>
             </div>
           </div>
         </section>
 
-        {/* Details Section */}
+        {/* Simple Details Section */}
         <section className="py-20 bg-gradient-to-br from-gray-900 to-black">
-          <div className="max-w-7xl mx-auto px-6 lg:px-8">
-            <div className="grid lg:grid-cols-3 gap-12">
-              {/* Synopsis */}
-              <div className="lg:col-span-2 space-y-8">
-                <motion.div
-                  initial={{ opacity: 0, y: 30 }}
-                  animate={{ opacity: 1, y: 0 }}
-                  transition={{ duration: 0.6 }}
-                >
-                  <h2 className="text-3xl font-bold text-white mb-6">Synopsis</h2>
-                  <div className="space-y-4 text-gray-300 leading-relaxed">
-                    <p>
-                      {ip.description} This groundbreaking content pushes the boundaries of storytelling, 
-                      combining innovative production techniques with compelling narratives that resonate 
-                      with audiences across demographics.
-                    </p>
-                    <p>
-                      Our team of creative professionals has crafted this intellectual property to deliver 
-                      maximum engagement while maintaining the highest production values. The content features 
-                      stunning visuals, captivating storylines, and memorable characters that leave lasting 
-                      impressions on viewers.
-                    </p>
-                    <p>
-                      With its unique blend of entertainment and meaningful messaging, this IP represents 
-                      the future of digital content creation and sets new standards for the industry.
-                    </p>
-                  </div>
-                </motion.div>
-
-                {/* Production Details */}
-                <motion.div
-                  initial={{ opacity: 0, y: 30 }}
-                  animate={{ opacity: 1, y: 0 }}
-                  transition={{ duration: 0.6, delay: 0.2 }}
-                >
-                  <h3 className="text-2xl font-bold text-white mb-4">Production Details</h3>
-                  <div className="grid md:grid-cols-2 gap-6">
-                    <div>
-                      <h4 className="text-lg font-semibold text-primary mb-2">Genre</h4>
-                      <p className="text-gray-300">{ip.category}</p>
-                    </div>
-                    <div>
-                      <h4 className="text-lg font-semibold text-primary mb-2">Duration</h4>
-                      <p className="text-gray-300">45-60 minutes per episode</p>
-                    </div>
-                    <div>
-                      <h4 className="text-lg font-semibold text-primary mb-2">Language</h4>
-                      <p className="text-gray-300">English with subtitles</p>
-                    </div>
-                    <div>
-                      <h4 className="text-lg font-semibold text-primary mb-2">Rating</h4>
-                      <p className="text-gray-300">TV-14</p>
-                    </div>
-                  </div>
-                </motion.div>
+          <div className="max-w-4xl mx-auto px-6 lg:px-8 text-center">
+            <motion.div
+              initial={{ opacity: 0, y: 30 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.6 }}
+              className="space-y-8"
+            >
+              <h2 className="text-4xl lg:text-5xl font-bold text-white mb-8">
+                {ip.title}
+              </h2>
+              
+              <div className="max-w-3xl mx-auto">
+                <p className="text-xl text-gray-300 leading-relaxed">
+                  {ip.description}
+                </p>
               </div>
-
-              {/* Sidebar */}
-              <div className="space-y-8">
-                <motion.div
-                  className="bg-gradient-to-br from-gray-800 to-gray-900 rounded-2xl p-6 border border-gray-700"
-                  initial={{ opacity: 0, x: 30 }}
-                  animate={{ opacity: 1, x: 0 }}
-                  transition={{ duration: 0.6 }}
-                >
-                  <h3 className="text-xl font-bold text-white mb-4">Quick Stats</h3>
-                  <div className="space-y-4">
-                    <div className="flex justify-between">
-                      <span className="text-gray-400">Total Views</span>
-                      <span className="text-white font-semibold">{ip.views}</span>
-                    </div>
-                    <div className="flex justify-between">
-                      <span className="text-gray-400">Release Date</span>
-                      <span className="text-white font-semibold">
-                        {new Date(ip.releaseDate).toLocaleDateString()}
-                      </span>
-                    </div>
-                    <div className="flex justify-between">
-                      <span className="text-gray-400">Status</span>
-                      <span className={`font-semibold ${
-                        ip.status === 'active' ? 'text-green-400' : 'text-yellow-400'
-                      }`}>
-                        {ip.status === 'active' ? 'Active' : 'Upcoming'}
-                      </span>
-                    </div>
-                    <div className="flex justify-between">
-                      <span className="text-gray-400">Rating</span>
-                      <span className="text-yellow-400 font-semibold">★ 4.8/5</span>
-                    </div>
-                  </div>
-                </motion.div>
-
-                <motion.div
-                  className="bg-gradient-to-br from-gray-800 to-gray-900 rounded-2xl p-6 border border-gray-700"
-                  initial={{ opacity: 0, x: 30 }}
-                  animate={{ opacity: 1, x: 0 }}
-                  transition={{ duration: 0.6, delay: 0.2 }}
-                >
-                  <h3 className="text-xl font-bold text-white mb-4">Awards & Recognition</h3>
-                  <div className="space-y-3">
-                    <div className="text-sm">
-                      <div className="text-primary font-semibold">Best Digital Series 2024</div>
-                      <div className="text-gray-400">Streaming Content Awards</div>
-                    </div>
-                    <div className="text-sm">
-                      <div className="text-primary font-semibold">Audience Choice Award</div>
-                      <div className="text-gray-400">Digital Media Festival</div>
-                    </div>
-                    <div className="text-sm">
-                      <div className="text-primary font-semibold">Innovation in Content</div>
-                      <div className="text-gray-400">Tech & Media Summit</div>
-                    </div>
-                  </div>
-                </motion.div>
-              </div>
-            </div>
+            </motion.div>
           </div>
         </section>
       </main>
