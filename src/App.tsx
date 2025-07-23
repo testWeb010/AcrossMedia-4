@@ -19,16 +19,15 @@ import Footer from './components/Footer';
 
 const AppContent = () => {
   const location = useLocation();
-  const isAdminPage = location.pathname.startsWith('/admin');
+  const isAdminPage = location.pathname.startsWith('/acs-admin');
+  const isAuthPage = ['/login', '/signup', '/forgot-password', '/pending-approval'].includes(location.pathname);
 
-  // If you do not want Header and Footer on certain pages, you can conditionally render them
-  // For example, to exclude from admin, login, signup, etc., use a condition like:
-  // const showHeaderFooter = !isAdminPage && !['/login', '/signup', '/forgot-password', '/pending-approval'].includes(location.pathname);
-  // Then wrap Header and Footer with {showHeaderFooter && <Header />}
+  // Hide header and footer on admin pages and auth pages
+  const showHeaderFooter = !isAdminPage && !isAuthPage;
 
   return (
     <div className="min-h-screen">
-      <Header />
+      {showHeaderFooter && <Header />}
       <Routes>
         <Route path="/" element={<Index />} />
         <Route path="/videos" element={<Videos />} />
@@ -48,7 +47,7 @@ const AppContent = () => {
         } />
         <Route path="*" element={<NotFound />} />
       </Routes>
-      <Footer />
+      {showHeaderFooter && <Footer />}
     </div>
   );
 };

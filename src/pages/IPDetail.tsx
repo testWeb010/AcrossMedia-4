@@ -1,29 +1,56 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import { useParams, useLocation, useNavigate } from 'react-router-dom';
 import { motion } from 'framer-motion';
-import { ArrowLeft, Play, Calendar, Eye, Share2, Download, Star } from 'lucide-react';
+import { ArrowLeft, Play, Calendar, Share2 } from 'lucide-react';
+import { apiRequestJson } from '../utils/api';
 // import Header from '@/components/Header';
 // import Footer from '@/components/Footer';
 
 interface IP {
-  id: string;
+  _id: string;
   title: string;
   description: string;
-  thumbnail: string;
-  videoUrl?: string;
+  image: string;
   category: string;
-  views: string;
-  releaseDate: string;
-  status: 'active' | 'upcoming';
+  createdAt: string;
 }
 
 const IPDetail = () => {
   const { id } = useParams();
   const location = useLocation();
   const navigate = useNavigate();
-  const ip = location.state?.ip as IP;
+  const [ip, setIp] = useState<IP | null>(location.state?.ip as IP || null);
+  const [loading, setLoading] = useState(!ip);
+  
+  useEffect(() => {
+    if (!ip && id) {
+      const fetchIP = async () => {
+        try {
+          setLoading(true);
+          const response = await apiRequestJson<IP>(`/api/projects/${id}`);
+          setIp(response);
+        } catch (error) {
+          console.error('Error fetching IP:', error);
+          navigate('/');
+        } finally {
+          setLoading(false);
+        }
+      };
+      fetchIP();
+    }
+  }, [id, ip, navigate]);
 
-  // If no IP data is passed via state, you would typically fetch it here
+  if (loading) {
+    return (
+      <div className="min-h-screen bg-black text-white flex items-center justify-center">
+        <div className="animate-pulse text-center">
+          <div className="h-8 bg-gray-700 rounded w-48 mx-auto mb-4"></div>
+          <div className="h-4 bg-gray-700 rounded w-32 mx-auto"></div>
+        </div>
+      </div>
+    );
+  }
+
   if (!ip) {
     return (
       <div className="min-h-screen bg-black text-white flex items-center justify-center">
@@ -49,7 +76,7 @@ const IPDetail = () => {
         <section className="relative min-h-[70vh] overflow-hidden">
           <div className="absolute inset-0">
             <img
-              src={ip.thumbnail}
+              src={ip.image}
               alt={ip.title}
               className="w-full h-full object-cover"
             />
@@ -78,13 +105,6 @@ const IPDetail = () => {
               >
                 <div className="space-y-6">
                   <div className="flex items-center gap-4">
-                    <span className={`px-4 py-2 rounded-full text-sm font-medium ${
-                      ip.status === 'active' 
-                        ? 'bg-green-500/20 text-green-400 border border-green-500/30' 
-                        : 'bg-yellow-500/20 text-yellow-400 border border-yellow-500/30'
-                    }`}>
-                      {ip.status === 'active' ? 'Now Streaming' : 'Coming Soon'}
-                    </span>
                     <span className="px-4 py-2 bg-primary/20 text-primary rounded-full text-sm font-medium border border-primary/30">
                       {ip.category}
                     </span>
@@ -102,16 +122,8 @@ const IPDetail = () => {
 
                   <div className="flex items-center gap-8 text-gray-400">
                     <div className="flex items-center gap-2">
-                      <Eye size={20} />
-                      <span className="text-lg">{ip.views} views</span>
-                    </div>
-                    <div className="flex items-center gap-2">
                       <Calendar size={20} />
-                      <span className="text-lg">{new Date(ip.releaseDate).toLocaleDateString()}</span>
-                    </div>
-                    <div className="flex items-center gap-2">
-                      <Star size={20} className="text-yellow-400" fill="currentColor" />
-                      <span className="text-lg">4.8/5</span>
+                      <span className="text-lg">{new Date(ip.createdAt).toLocaleDateString()}</span>
                     </div>
                   </div>
                 </div>
@@ -121,14 +133,7 @@ const IPDetail = () => {
                     <div className="absolute inset-0 bg-gradient-to-r from-primary/80 to-purple-500/80 opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
                     <div className="relative flex items-center gap-3">
                       <Play size={20} />
-                      <span>Watch Now</span>
-                    </div>
-                  </button>
-                  
-                  <button className="group border-2 border-gray-600 text-gray-300 px-8 py-4 rounded-2xl font-semibold hover:border-primary hover:text-white transition-all duration-300 hover:shadow-lg hover:shadow-primary/20">
-                    <div className="flex items-center gap-3">
-                      <Download size={20} />
-                      <span>Download</span>
+                      <span>View Details</span>
                     </div>
                   </button>
 
@@ -145,28 +150,17 @@ const IPDetail = () => {
                 transition={{ duration: 0.8, delay: 0.2 }}
               >
                 <div className="relative bg-gradient-to-br from-gray-800 to-gray-900 rounded-3xl overflow-hidden border border-gray-700 aspect-video">
-                  {ip.videoUrl ? (
-                    <iframe
-                      src={ip.videoUrl}
-                      title={ip.title}
-                      className="w-full h-full"
-                      allowFullScreen
-                    />
-                  ) : (
-                    <>
-                      <img
-                        src={ip.thumbnail}
-                        alt={ip.title}
-                        className="w-full h-full object-cover"
-                      />
-                      <div className="absolute inset-0 bg-black/20"></div>
-                      <div className="absolute inset-0 flex items-center justify-center">
-                        <div className="w-24 h-24 bg-white/10 backdrop-blur-md border border-white/20 rounded-full flex items-center justify-center cursor-pointer hover:scale-110 transition-all duration-300">
-                          <Play size={40} className="text-white ml-2" fill="white" />
-                        </div>
-                      </div>
-                    </>
-                  )}
+                  <img
+                    src={ip.image}
+                    alt={ip.title}
+                    className="w-full h-full object-cover"
+                  />
+                  <div className="absolute inset-0 bg-black/20"></div>
+                  <div className="absolute inset-0 flex items-center justify-center">
+                    <div className="w-24 h-24 bg-white/10 backdrop-blur-md border border-white/20 rounded-full flex items-center justify-center cursor-pointer hover:scale-110 transition-all duration-300">
+                      <Play size={40} className="text-white ml-2" fill="white" />
+                    </div>
+                  </div>
                 </div>
               </motion.div>
             </div>

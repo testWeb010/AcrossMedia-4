@@ -2,17 +2,15 @@ import React, { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { ChevronLeft, ChevronRight, Play, Calendar, Eye, ArrowUpRight } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
+import { apiRequestJson } from '../utils/api';
 
 interface IP {
-  id: string;
+  _id: string;
   title: string;
   description: string;
-  thumbnail: string;
-  videoUrl?: string;
+  image: string;
   category: string;
-  views: string;
-  releaseDate: string;
-  status: 'active' | 'upcoming';
+  createdAt: string;
 }
 
 const IPShowcase = () => {
@@ -21,104 +19,22 @@ const IPShowcase = () => {
   const [loading, setLoading] = useState(true);
   const navigate = useNavigate();
 
-  // Mock data for demonstration - replace with actual API call
+  // Fetch IP projects from API
   useEffect(() => {
-    const mockIPs: IP[] = [
-      {
-        id: '1',
-        title: 'The Future Chronicles',
-        description: 'A groundbreaking sci-fi series exploring humanity\'s next chapter',
-        thumbnail: 'https://images.unsplash.com/photo-1518640467707-6811f4a6ab73?w=800&h=600&fit=crop',
-        videoUrl: 'https://www.youtube.com/embed/dQw4w9WgXcQ',
-        category: 'Series',
-        views: '2.5M',
-        releaseDate: '2024-03-15',
-        status: 'active'
-      },
-      {
-        id: '2',
-        title: 'Celebrity Chef Masters',
-        description: 'Top chefs compete in the ultimate culinary showdown',
-        thumbnail: 'https://images.unsplash.com/photo-1556909114-4f6e8cda40a3?w=800&h=600&fit=crop',
-        videoUrl: 'https://www.youtube.com/embed/dQw4w9WgXcQ',
-        category: 'Reality Show',
-        views: '1.8M',
-        releaseDate: '2024-04-20',
-        status: 'active'
-      },
-      {
-        id: '3',
-        title: 'Digital Nomad Stories',
-        description: 'Documentary series following remote workers around the globe',
-        thumbnail: 'https://images.unsplash.com/photo-1488190211105-8b0e65b80b4e?w=800&h=600&fit=crop',
-        videoUrl: 'https://www.youtube.com/embed/dQw4w9WgXcQ',
-        category: 'Documentary',
-        views: '950K',
-        releaseDate: '2024-02-10',
-        status: 'active'
-      },
-      {
-        id: '4',
-        title: 'Startup Revolution',
-        description: 'Inside the world of tech entrepreneurs and innovation',
-        thumbnail: 'https://images.unsplash.com/photo-1559136555-9303baea8ebd?w=800&h=600&fit=crop',
-        videoUrl: 'https://www.youtube.com/embed/dQw4w9WgXcQ',
-        category: 'Business',
-        views: '1.2M',
-        releaseDate: '2024-05-01',
-        status: 'upcoming'
-      },
-      {
-        id: '5',
-        title: 'Music Legends Live',
-        description: 'Exclusive performances from the biggest names in music',
-        thumbnail: 'https://images.unsplash.com/photo-1493225457124-a3eb161ffa5f?w=800&h=600&fit=crop',
-        videoUrl: 'https://www.youtube.com/embed/dQw4w9WgXcQ',
-        category: 'Music',
-        views: '3.1M',
-        releaseDate: '2024-01-25',
-        status: 'active'
-      },
-      {
-        id: '6',
-        title: 'Tech Innovators',
-        description: 'Meet the minds behind tomorrow\'s technology',
-        thumbnail: 'https://images.unsplash.com/photo-1581092795360-fd1ca04f0952?w=800&h=600&fit=crop',
-        videoUrl: 'https://www.youtube.com/embed/dQw4w9WgXcQ',
-        category: 'Technology',
-        views: '2.1M',
-        releaseDate: '2024-06-10',
-        status: 'active'
-      },
-      {
-        id: '7',
-        title: 'Nature\'s Wonders',
-        description: 'Explore the most breathtaking landscapes on Earth',
-        thumbnail: 'https://images.unsplash.com/photo-1506905925346-21bda4d32df4?w=800&h=600&fit=crop',
-        videoUrl: 'https://www.youtube.com/embed/dQw4w9WgXcQ',
-        category: 'Nature',
-        views: '1.7M',
-        releaseDate: '2024-07-15',
-        status: 'active'
-      },
-      {
-        id: '8',
-        title: 'Urban Legends',
-        description: 'Investigating mysterious stories from around the world',
-        thumbnail: 'https://images.unsplash.com/photo-1519389950473-47ba0277781c?w=800&h=600&fit=crop',
-        videoUrl: 'https://www.youtube.com/embed/dQw4w9WgXcQ',
-        category: 'Mystery',
-        views: '1.4M',
-        releaseDate: '2024-08-20',
-        status: 'upcoming'
+    const fetchIPProjects = async () => {
+      try {
+        setLoading(true);
+        const response = await apiRequestJson<{projects: IP[]}>('/api/projects?category=IP');
+        setIps(response.projects || []);
+      } catch (error) {
+        console.error('Error fetching IP projects:', error);
+        setIps([]);
+      } finally {
+        setLoading(false);
       }
-    ];
+    };
 
-    // Simulate API loading
-    setTimeout(() => {
-      setIps(mockIPs);
-      setLoading(false);
-    }, 1000);
+    fetchIPProjects();
   }, []);
 
   const nextSlide = () => {
@@ -130,7 +46,7 @@ const IPShowcase = () => {
   };
 
   const handleIPClick = (ip: IP) => {
-    navigate(`/ip/${ip.id}`, { state: { ip } });
+    navigate(`/ip/${ip._id}`, { state: { ip } });
   };
 
   // Auto-advance slides
@@ -200,7 +116,7 @@ const IPShowcase = () => {
                   onClick={() => handleIPClick(ips[currentSlide])}
                 >
                   <img
-                    src={ips[currentSlide].thumbnail}
+                    src={ips[currentSlide].image}
                     alt={ips[currentSlide].title}
                     className="absolute inset-0 w-full h-full object-cover"
                   />
@@ -209,13 +125,6 @@ const IPShowcase = () => {
                   {/* Content Overlay */}
                   <div className="absolute bottom-0 left-0 right-0 p-12">
                     <div className="flex items-center gap-4 mb-4">
-                      <span className={`px-3 py-1 rounded-full text-xs font-medium ${
-                        ips[currentSlide].status === 'active' 
-                          ? 'bg-green-500/20 text-green-400' 
-                          : 'bg-yellow-500/20 text-yellow-400'
-                      }`}>
-                        {ips[currentSlide].status === 'active' ? 'Live' : 'Coming Soon'}
-                      </span>
                       <span className="px-3 py-1 bg-primary/20 text-primary rounded-full text-xs font-medium">
                         {ips[currentSlide].category}
                       </span>
@@ -225,18 +134,10 @@ const IPShowcase = () => {
                       {ips[currentSlide].title}
                     </h3>
                     
-                    <p className="text-xl text-gray-300 mb-6 max-w-2xl">
-                      {ips[currentSlide].description}
-                    </p>
-                    
                     <div className="flex items-center gap-6 text-gray-400">
                       <div className="flex items-center gap-2">
-                        <Eye size={18} />
-                        <span>{ips[currentSlide].views} views</span>
-                      </div>
-                      <div className="flex items-center gap-2">
                         <Calendar size={18} />
-                        <span>{new Date(ips[currentSlide].releaseDate).toLocaleDateString()}</span>
+                        <span>{new Date(ips[currentSlide].createdAt).toLocaleDateString()}</span>
                       </div>
                     </div>
                   </div>
@@ -297,7 +198,7 @@ const IPShowcase = () => {
             <div className="flex gap-4 min-w-max">
               {ips.map((ip, index) => (
                 <motion.div
-                  key={ip.id}
+                  key={ip._id}
                   className={`relative aspect-video w-80 rounded-xl overflow-hidden cursor-pointer border-2 transition-all flex-shrink-0 ${
                     index === currentSlide 
                       ? 'border-primary shadow-lg shadow-primary/25' 
@@ -311,18 +212,11 @@ const IPShowcase = () => {
                   transition={{ duration: 0.2 }}
                 >
                   <img
-                    src={ip.thumbnail}
+                    src={ip.image}
                     alt={ip.title}
                     className="w-full h-full object-cover"
                   />
                   <div className="absolute inset-0 bg-gradient-to-t from-black/80 to-transparent"></div>
-                  
-                  {/* Play Button Overlay */}
-                  <div className="absolute inset-0 flex items-center justify-center opacity-0 hover:opacity-100 transition-opacity">
-                    <div className="w-16 h-16 bg-white/10 backdrop-blur-md border border-white/20 rounded-full flex items-center justify-center">
-                      <Play size={24} className="text-white ml-1" fill="white" />
-                    </div>
-                  </div>
 
                   <div className="absolute bottom-3 left-3 right-3">
                     <h4 className="text-white text-sm font-semibold truncate mb-1">
