@@ -4,6 +4,7 @@ import Services from '@/components/Services';
 import About from '@/components/About';
 import Portfolio from '@/components/Portfolio';
 import IPShowcase from '@/components/IPShowcase';
+import BrandsShowcase from '@/components/BrandsShowcase';
 import Contact from '@/components/Contact';
 
 const Index = () => {
@@ -14,6 +15,7 @@ const Index = () => {
       <About />
       <Portfolio />
       <IPShowcase />
+      <BrandsShowcase />
       <Contact />
     </div>
   );

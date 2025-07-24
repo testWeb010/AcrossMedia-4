@@ -24,8 +24,12 @@ const IPShowcase = () => {
     const fetchIPProjects = async () => {
       try {
         setLoading(true);
-        const response = await apiRequestJson<{projects: IP[]}>('/api/projects?category=IP');
-        setIps(response.projects || []);
+        // Use the full URL without query params and filter on frontend for now
+        const response = await apiRequestJson<{projects: IP[]}>('/api/projects');
+        console.log('All projects:', response.projects);
+        const ipProjects = response.projects?.filter(project => project.category === 'IP') || [];
+        console.log('Filtered IP projects:', ipProjects);
+        setIps(ipProjects);
       } catch (error) {
         console.error('Error fetching IP projects:', error);
         setIps([]);
