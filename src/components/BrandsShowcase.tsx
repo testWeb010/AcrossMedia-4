@@ -2,131 +2,221 @@ import React from 'react';
 import { motion } from 'framer-motion';
 
 const BrandsShowcase = () => {
-  const mainBrands = [
-    'VIRGIO', 'TVS RAIDER', 'NESTERRA', 'AMANTE', 'CARATLANE',
-    'TOOTHSI', 'BIBA', 'HELIOS', 'PRESTIGE', 'MARS',
-    'DERMA', 'HAPPILO', 'RED CHIEF', 'RADIO CITY', 'LOOKS SALON'
+  const presentingSponsor = {
+    name: 'VIRGIO',
+    category: 'Presenting Sponsor'
+  };
+
+  const mainPartners = [
+    { name: 'TVS RAIDER', category: 'DRIVEN BY', subtitle: 'THE WICKED RIDE' },
+    { name: 'NESTERRA', category: 'POWERED BY PARTNER', subtitle: 'HOME DESIGN EXCELLENCE' },
+    { name: 'AMANTE', category: 'POWERED BY PARTNER', subtitle: 'FEELS LIKE AIR' }
   ];
 
-  const additionalBrands = [
+  const categoryPartners = [
+    { name: 'CARATLANE', category: 'Stylish Jewellery Partner', logo: 'C' },
+    { name: 'TOOTHSI', category: 'Smile Partner', logo: 'T' },
+    { name: 'BIBA', category: 'Style Partner', logo: 'B' },
+    { name: 'HELIOS', category: 'Stylish Watches Partner', logo: 'H' },
+    { name: 'PRESTIGE', category: 'Stylish Kitchen Partner', logo: 'P' },
+    { name: 'MARS', category: 'Beauty Partner', logo: 'M' },
+    { name: 'DERMA', category: 'Skincare Partner', logo: 'D' },
+    { name: 'HAPPILO', category: 'Healthy Snacking Partner', logo: 'H' },
+    { name: 'RED CHIEF', category: 'Stylish Footwear Partner', logo: 'R' },
+    { name: 'RADIO CITY', category: 'Radio Partner', logo: 'R' },
+    { name: 'LOOKS SALON', category: 'Glam Partner', logo: 'L' },
+    { name: 'FNP', category: 'Celebration Partner', logo: 'F' },
+    { name: 'SPRITE', category: 'Official Partner', logo: 'S' },
+    { name: 'JIOTV', category: 'Streaming Partner', logo: 'J' }
+  ];
+
+  const promotionalPartners = [
     'HUNGAMA', 'AMAZON FIRE TV', 'MI LED TV', 'ONEPLUS', 'TCL', 
     'AIRTEL', 'WATCHOO', 'NET TV', 'VI', 'MX PLAYER', 
-    'TATA PLAY BINGE', 'CLOUDWALKER', 'JIO STREAM', 'ACT',
-    'DISH SMRT', 'YUPPTV', 'X STREAM', 'ZEE5', 'SONY LIV'
+    'TATA PLAY BINGE', 'CLOUDWALKER', 'JIO STREAM', 'ACT'
+  ];
+
+  const associationPartners = [
+    'DISH SMRT', 'YUPPTV', 'X STREAM', 'ZEE5', 'SONY LIV', 'HOTSTAR'
   ];
 
   return (
-    <section className="py-24 bg-gradient-to-br from-gray-900 via-black to-gray-900 relative overflow-hidden">
-      {/* Background Effects */}
-      <div className="absolute inset-0">
-        <div className="absolute top-1/3 left-1/5 w-96 h-96 bg-primary/3 rounded-full blur-3xl"></div>
-        <div className="absolute bottom-1/3 right-1/5 w-96 h-96 bg-purple-500/3 rounded-full blur-3xl"></div>
+    <section className="py-32 bg-black relative overflow-hidden">
+      {/* Elegant background pattern */}
+      <div className="absolute inset-0 opacity-5">
+        <div className="absolute top-0 left-0 w-full h-px bg-gradient-to-r from-transparent via-primary to-transparent"></div>
+        <div className="absolute bottom-0 left-0 w-full h-px bg-gradient-to-r from-transparent via-primary to-transparent"></div>
       </div>
 
-      <div className="relative max-w-7xl mx-auto px-6 lg:px-8">
-        {/* Section Header */}
-        <div className="text-center mb-16">
-          <div className="inline-flex items-center gap-2 bg-gray-800/50 backdrop-blur-sm border border-gray-700 rounded-full px-6 py-3 mb-8">
-            <div className="w-2 h-2 bg-primary rounded-full animate-pulse"></div>
-            <span className="text-primary text-sm font-medium tracking-wider uppercase">Partners</span>
-          </div>
-          
-          <h2 className="text-4xl lg:text-5xl font-bold mb-6">
-            <span className="bg-gradient-to-r from-white to-gray-300 bg-clip-text text-transparent">
-              50+ Brands Trust Us
-            </span>
-          </h2>
-          
-          <p className="text-lg text-gray-400 max-w-2xl mx-auto mb-12">
-            Partnering with leading brands across industries to create exceptional experiences and drive meaningful results.
-          </p>
-        </div>
-
-        {/* Main Brands Grid */}
-        <div className="mb-16">
-          <motion.div 
-            className="grid grid-cols-3 md:grid-cols-5 lg:grid-cols-6 xl:grid-cols-8 gap-8 items-center justify-items-center"
-            initial={{ opacity: 0, y: 20 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true }}
-            transition={{ duration: 0.6 }}
-          >
-            {mainBrands.map((brand, index) => (
-              <motion.div
-                key={index}
-                className="group flex items-center justify-center w-24 h-16 bg-white/5 backdrop-blur-sm border border-gray-700/30 rounded-lg hover:border-primary/30 hover:bg-white/10 transition-all duration-300"
-                whileHover={{ scale: 1.1, y: -2 }}
-                initial={{ opacity: 0, scale: 0.8 }}
-                whileInView={{ opacity: 1, scale: 1 }}
-                viewport={{ once: true }}
-                transition={{ delay: index * 0.1 }}
-              >
-                <span className="text-white/80 text-xs font-bold text-center leading-tight group-hover:text-white transition-colors">
-                  {brand}
-                </span>
-              </motion.div>
-            ))}
-          </motion.div>
-        </div>
-
-        {/* Divider */}
-        <div className="flex items-center justify-center mb-12">
-          <div className="h-px bg-gradient-to-r from-transparent via-gray-600 to-transparent w-full max-w-md"></div>
-          <span className="mx-4 text-gray-500 text-sm">And Many More</span>
-          <div className="h-px bg-gradient-to-r from-transparent via-gray-600 to-transparent w-full max-w-md"></div>
-        </div>
-
-        {/* Additional Partners */}
+      <div className="relative max-w-6xl mx-auto px-6">
+        {/* Header */}
         <motion.div 
-          className="grid grid-cols-4 md:grid-cols-6 lg:grid-cols-8 xl:grid-cols-10 gap-6 items-center justify-items-center"
-          initial={{ opacity: 0, y: 20 }}
+          className="text-center mb-20"
+          initial={{ opacity: 0, y: 30 }}
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true }}
-          transition={{ duration: 0.6, delay: 0.3 }}
+          transition={{ duration: 0.8 }}
         >
-          {additionalBrands.map((brand, index) => (
-            <motion.div
-              key={index}
-              className="flex items-center justify-center w-20 h-12 bg-gray-800/30 backdrop-blur-sm border border-gray-700/20 rounded-md hover:border-primary/20 hover:bg-gray-800/50 transition-all duration-300"
-              whileHover={{ scale: 1.05 }}
-              initial={{ opacity: 0, scale: 0.9 }}
-              whileInView={{ opacity: 1, scale: 1 }}
-              viewport={{ once: true }}
-              transition={{ delay: index * 0.05 }}
-            >
-              <span className="text-gray-400 text-[10px] font-medium text-center leading-tight hover:text-gray-300 transition-colors">
-                {brand}
-              </span>
-            </motion.div>
+          <div className="mb-8">
+            <span className="text-primary/60 text-sm tracking-[0.3em] font-light">
+              / PARTNERS /
+            </span>
+          </div>
+        </motion.div>
+
+        {/* Presenting Sponsor */}
+        <motion.div 
+          className="text-center mb-20"
+          initial={{ opacity: 0, scale: 0.9 }}
+          whileInView={{ opacity: 1, scale: 1 }}
+          viewport={{ once: true }}
+          transition={{ duration: 0.6 }}
+        >
+          <div className="mb-4">
+            <span className="text-primary text-xs tracking-wider">{presentingSponsor.category}</span>
+          </div>
+          <div className="flex justify-center items-center gap-4 mb-8">
+            <div className="w-3 h-3 rounded-full bg-orange-500"></div>
+            <div className="w-3 h-3 rounded-full bg-cyan-400"></div>
+            <div className="w-3 h-3 rounded-full bg-green-500"></div>
+          </div>
+          <h1 className="text-6xl md:text-8xl font-light text-white tracking-wide">
+            {presentingSponsor.name}
+          </h1>
+        </motion.div>
+
+        {/* Main Partners */}
+        <motion.div 
+          className="grid md:grid-cols-3 gap-12 mb-20"
+          initial={{ opacity: 0, y: 40 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true }}
+          transition={{ duration: 0.8, delay: 0.2 }}
+        >
+          {mainPartners.map((partner, index) => (
+            <div key={index} className="text-center">
+              <div className="mb-4">
+                <span className="text-primary/80 text-xs tracking-wider uppercase">
+                  {partner.category}
+                </span>
+              </div>
+              <div className="bg-white/5 backdrop-blur-sm border border-white/10 rounded-2xl p-8 hover:border-primary/30 transition-all duration-300 group">
+                <h3 className="text-2xl font-bold text-white mb-2 group-hover:text-primary transition-colors">
+                  {partner.name}
+                </h3>
+                <p className="text-gray-400 text-sm tracking-wider">
+                  {partner.subtitle}
+                </p>
+              </div>
+            </div>
           ))}
         </motion.div>
 
-        {/* Bottom Stats */}
-        <div className="text-center mt-16">
-          <motion.div
-            className="inline-flex items-center gap-6 bg-gradient-to-r from-primary/10 to-purple-500/10 backdrop-blur-sm border border-primary/20 rounded-2xl px-8 py-6"
-            whileHover={{ scale: 1.02 }}
-            initial={{ opacity: 0, y: 20 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true }}
-            transition={{ delay: 0.5 }}
-          >
-            <div className="text-center">
-              <div className="text-2xl font-bold text-white">50+</div>
-              <div className="text-sm text-gray-400">Brands</div>
-            </div>
-            <div className="w-px h-8 bg-gray-600"></div>
-            <div className="text-center">
-              <div className="text-2xl font-bold text-white">100+</div>
-              <div className="text-sm text-gray-400">Projects</div>
-            </div>
-            <div className="w-px h-8 bg-gray-600"></div>
-            <div className="text-center">
-              <div className="text-2xl font-bold text-white">5+</div>
-              <div className="text-sm text-gray-400">Years Experience</div>
-            </div>
-          </motion.div>
+        {/* Category Partners Grid */}
+        <motion.div 
+          className="mb-20"
+          initial={{ opacity: 0, y: 40 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true }}
+          transition={{ duration: 0.8, delay: 0.4 }}
+        >
+          <div className="grid grid-cols-2 md:grid-cols-5 gap-6">
+            {categoryPartners.map((partner, index) => (
+              <motion.div
+                key={index}
+                className="group text-center"
+                whileHover={{ scale: 1.05 }}
+                transition={{ duration: 0.2 }}
+              >
+                <div className="mb-2">
+                  <span className="text-primary/60 text-[10px] tracking-wider uppercase">
+                    {partner.category}
+                  </span>
+                </div>
+                <div className="bg-white/5 backdrop-blur-sm border border-white/10 rounded-xl p-6 h-20 flex items-center justify-center hover:border-primary/30 hover:bg-white/10 transition-all duration-300">
+                  <div className="w-8 h-8 bg-white/20 rounded-lg flex items-center justify-center">
+                    <span className="text-white font-bold text-sm">{partner.logo}</span>
+                  </div>
+                </div>
+                <div className="mt-2">
+                  <span className="text-white text-xs font-medium">{partner.name}</span>
+                </div>
+              </motion.div>
+            ))}
+          </div>
+        </motion.div>
+
+        {/* Divider */}
+        <div className="flex items-center justify-center my-16">
+          <div className="h-px bg-gradient-to-r from-transparent via-white/20 to-transparent w-full max-w-2xl"></div>
         </div>
+
+        {/* Promotional Partners */}
+        <motion.div 
+          className="mb-16"
+          initial={{ opacity: 0, y: 40 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true }}
+          transition={{ duration: 0.8, delay: 0.6 }}
+        >
+          <div className="text-center mb-8">
+            <span className="text-white text-lg font-light tracking-wider">Promotional Partners</span>
+          </div>
+          <div className="flex flex-wrap justify-center gap-8">
+            {promotionalPartners.map((partner, index) => (
+              <motion.div
+                key={index}
+                className="bg-white/5 backdrop-blur-sm border border-white/10 rounded-lg px-6 py-3 hover:border-primary/30 hover:bg-white/10 transition-all duration-300"
+                whileHover={{ scale: 1.05 }}
+                initial={{ opacity: 0, x: -20 }}
+                whileInView={{ opacity: 1, x: 0 }}
+                viewport={{ once: true }}
+                transition={{ delay: index * 0.1 }}
+              >
+                <span className="text-white/80 text-sm font-medium tracking-wide">
+                  {partner}
+                </span>
+              </motion.div>
+            ))}
+          </div>
+        </motion.div>
+
+        {/* Bottom divider */}
+        <div className="flex items-center justify-center my-16">
+          <div className="h-px bg-gradient-to-r from-transparent via-white/20 to-transparent w-full max-w-2xl"></div>
+        </div>
+
+        {/* In Association With */}
+        <motion.div 
+          className="text-center"
+          initial={{ opacity: 0, y: 40 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true }}
+          transition={{ duration: 0.8, delay: 0.8 }}
+        >
+          <div className="mb-8">
+            <span className="text-primary/60 text-sm tracking-[0.3em] font-light">
+              / IN ASSOCIATION WITH /
+            </span>
+          </div>
+          <div className="flex flex-wrap justify-center gap-6">
+            {associationPartners.map((partner, index) => (
+              <motion.div
+                key={index}
+                className="bg-white/3 backdrop-blur-sm border border-white/5 rounded-lg px-4 py-2 hover:border-primary/20 transition-all duration-300"
+                whileHover={{ scale: 1.05 }}
+                initial={{ opacity: 0, y: 10 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                viewport={{ once: true }}
+                transition={{ delay: index * 0.1 }}
+              >
+                <span className="text-white/60 text-xs font-medium tracking-wide">
+                  {partner}
+                </span>
+              </motion.div>
+            ))}
+          </div>
+        </motion.div>
       </div>
     </section>
   );
