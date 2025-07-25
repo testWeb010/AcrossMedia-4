@@ -19,20 +19,41 @@ const IPShowcase = () => {
   const [loading, setLoading] = useState(true);
   const navigate = useNavigate();
 
-  // Fetch IP projects from API
+  // Fetch IP projects from API with category filter
   useEffect(() => {
     const fetchIPProjects = async () => {
       try {
         setLoading(true);
-        // Use the full URL without query params and filter on frontend for now
-        const response = await apiRequestJson<{projects: IP[]}>('/api/projects');
-        console.log('All projects:', response.projects);
-        const ipProjects = response.projects?.filter(project => project.category === 'IP') || [];
-        console.log('Filtered IP projects:', ipProjects);
+        // First try with category filter in API
+        const response = await apiRequestJson<{projects: IP[]}>('/api/projects?category=IP');
+        console.log('API Response for IP projects:', response);
+        
+        let ipProjects = response.projects || [];
+        
+        // If no projects returned or no category filtering in API, filter manually
+        if (ipProjects.length === 0) {
+          console.log('No IP projects from API filter, trying to fetch all and filter manually...');
+          const allResponse = await apiRequestJson<{projects: IP[]}>('/api/projects');
+          ipProjects = allResponse.projects?.filter(project => 
+            project.category?.toLowerCase() === 'ip'
+          ) || [];
+        }
+        
+        console.log('Final IP projects:', ipProjects);
         setIps(ipProjects);
       } catch (error) {
         console.error('Error fetching IP projects:', error);
-        setIps([]);
+        // Set some demo data for testing if API fails
+        setIps([
+          {
+            _id: 'demo1',
+            title: 'Demo IP Project 1',
+            description: 'This is a demo intellectual property project',
+            image: 'https://images.unsplash.com/photo-1551288049-bebda4e38f71?w=800',
+            category: 'IP',
+            createdAt: new Date().toISOString()
+          }
+        ]);
       } finally {
         setLoading(false);
       }
@@ -53,10 +74,12 @@ const IPShowcase = () => {
     navigate(`/ip/${ip._id}`, { state: { ip } });
   };
 
-  // Auto-advance slides
+  // Auto-advance slides with smooth right-to-left movement
   useEffect(() => {
-    const timer = setInterval(nextSlide, 5000);
-    return () => clearInterval(timer);
+    if (ips.length > 1) {
+      const timer = setInterval(nextSlide, 4000);
+      return () => clearInterval(timer);
+    }
   }, [ips.length]);
 
   if (loading) {
@@ -112,10 +135,15 @@ const IPShowcase = () => {
               {ips.length > 0 && (
                 <motion.div
                   key={currentSlide}
-                  initial={{ opacity: 0, x: 300 }}
+                  initial={{ opacity: 0, x: 100 }}
                   animate={{ opacity: 1, x: 0 }}
-                  exit={{ opacity: 0, x: -300 }}
-                  transition={{ duration: 0.5, ease: "easeInOut" }}
+                  exit={{ opacity: 0, x: -100 }}
+                  transition={{ 
+                    duration: 0.6, 
+                    ease: [0.25, 0.46, 0.45, 0.94],
+                    type: "spring",
+                    stiffness: 100
+                  }}
                   className="relative aspect-[16/9] bg-gradient-to-br from-gray-800 to-gray-900 cursor-pointer group"
                   onClick={() => handleIPClick(ips[currentSlide])}
                 >
@@ -196,24 +224,35 @@ const IPShowcase = () => {
           </div>
         </div>
 
-        {/* Horizontal Scrolling Thumbnail Navigation */}
+        {/* Horizontal Moving Carousel */}
         <div className="relative">
-          <div className="overflow-x-auto pb-4 scrollbar-hide">
-            <div className="flex gap-4 min-w-max">
-              {ips.map((ip, index) => (
+          <div className="overflow-hidden">
+            <motion.div 
+              className="flex gap-6"
+              animate={{ 
+                x: ips.length > 0 ? -((currentSlide * 320) % (ips.length * 320)) : 0 
+              }}
+              transition={{ 
+                duration: 0.8, 
+                ease: "easeInOut" 
+              }}
+              style={{ width: `${ips.length * 320}px` }}
+            >
+              {/* Create infinite loop effect by duplicating items */}
+              {[...ips, ...ips, ...ips].map((ip, index) => (
                 <motion.div
-                  key={ip._id}
+                  key={`${ip._id}-${index}`}
                   className={`relative aspect-video w-80 rounded-xl overflow-hidden cursor-pointer border-2 transition-all flex-shrink-0 ${
-                    index === currentSlide 
+                    (index % ips.length) === currentSlide 
                       ? 'border-primary shadow-lg shadow-primary/25' 
                       : 'border-gray-700 hover:border-gray-500'
                   }`}
                   onClick={() => {
-                    setCurrentSlide(index);
+                    setCurrentSlide(index % ips.length);
                     handleIPClick(ip);
                   }}
-                  whileHover={{ scale: 1.05 }}
-                  transition={{ duration: 0.2 }}
+                  whileHover={{ scale: 1.05, y: -5 }}
+                  transition={{ duration: 0.3 }}
                 >
                   <img
                     src={ip.image}
@@ -232,7 +271,7 @@ const IPShowcase = () => {
                   </div>
                 </motion.div>
               ))}
-            </div>
+            </motion.div>
           </div>
           
           {/* Scroll indicators */}
