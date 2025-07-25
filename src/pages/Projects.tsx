@@ -1,5 +1,5 @@
 import React, { useState, useMemo, useEffect, useCallback, useRef } from 'react';
-import { Search, ChevronLeft, ChevronRight, ListFilter, ExternalLink, Play, ArrowUpRight, AlertCircle, Loader, FolderOpen, Sparkles } from 'lucide-react';
+import { Search, ChevronLeft, ChevronRight, ListFilter, ExternalLink, Play, ArrowUpRight, AlertCircle, Loader, FolderOpen, Sparkles, Rocket, Briefcase, Zap, Plus, Target, TrendingUp } from 'lucide-react';
 import { formatTimeAgo } from '@/lib/utils';
 import { apiRequestJson } from '@/utils/api';
 
@@ -41,7 +41,6 @@ const Projects = () => {
       setError(null);
       const response = await apiRequestJson('/api/projects');
       
-      // Handle both array response and object with projects property
       if (Array.isArray(response)) {
         setProjects(response);
       } else if (response && typeof response === 'object' && 'projects' in response) {
@@ -66,13 +65,11 @@ const Projects = () => {
       return matchesCategory;
     });
 
-    // Sort by creation date (newest first)
     filtered.sort((a, b) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime());
 
     return filtered;
   }, [projects, activeCategory]);
 
-  // Initialize displayed projects when filtered projects change
   useEffect(() => {
     if (filteredAndSortedProjects.length > 0) {
       const initial = filteredAndSortedProjects.slice(0, ITEMS_PER_PAGE);
@@ -84,7 +81,6 @@ const Projects = () => {
     }
   }, [filteredAndSortedProjects]);
 
-  // Lazy loading setup
   const loadMoreProjects = useCallback(() => {
     if (displayedProjects.length < filteredAndSortedProjects.length && !loadingMore) {
       setLoadingMore(true);
@@ -97,7 +93,6 @@ const Projects = () => {
     }
   }, [displayedProjects.length, filteredAndSortedProjects, loadingMore]);
 
-  // Intersection Observer for lazy loading
   useEffect(() => {
     if (observerRef.current) observerRef.current.disconnect();
 
@@ -119,29 +114,30 @@ const Projects = () => {
     };
   }, [hasMore, loadingMore, loadMoreProjects]);
 
+  // --- NEW: Beautiful Empty State Component ---
   const EmptyState = () => (
-    <div className="text-center py-20">
+    <div className="text-center py-20 overflow-hidden">
       {/* Moving card animation */}
-      <div className="relative mb-12 overflow-hidden">
-        <div className="flex animate-[slide-in-right_4s_ease-in-out_infinite] space-x-8">
-          {[...Array(3)].map((_, index) => (
+      <div className="relative mb-12 h-56 flex items-center">
+        <div className="absolute inset-0 bg-gradient-to-r from-black via-transparent to-black z-10"></div>
+        <div className="flex animate-[scroll_20s_linear_infinite] space-x-8">
+          {[...Array(6)].map((_, index) => (
             <div
               key={index}
-              className="flex-shrink-0 w-80 h-48 bg-gradient-to-br from-gray-900 to-gray-800 rounded-3xl border border-gray-700 p-6 transform hover:scale-105 transition-transform duration-300"
+              className="flex-shrink-0 w-80 h-48 bg-gradient-to-br from-gray-900 to-gray-800 rounded-3xl border border-gray-700 p-6"
             >
               <div className="flex items-center gap-3 mb-4">
-                <div className="w-12 h-12 bg-gradient-to-r from-cyan-500 to-pink-600 rounded-full flex items-center justify-center">
-                  <FolderOpen className="w-6 h-6 text-white" />
+                <div className="w-12 h-12 bg-gradient-to-r from-cyan-600 to-pink-700 rounded-full flex items-center justify-center">
+                  <FolderOpen className="w-6 h-6 text-white/80" />
                 </div>
                 <div>
-                  <div className="h-4 bg-gray-700 rounded w-24 mb-2"></div>
-                  <div className="h-3 bg-gray-600 rounded w-16"></div>
+                  <div className="h-4 bg-gray-700 rounded w-24 mb-2 animate-pulse"></div>
+                  <div className="h-3 bg-gray-600 rounded w-16 animate-pulse" style={{animationDelay: '0.2s'}}></div>
                 </div>
               </div>
               <div className="space-y-2">
-                <div className="h-3 bg-gray-700 rounded"></div>
-                <div className="h-3 bg-gray-700 rounded w-4/5"></div>
-                <div className="h-3 bg-gray-700 rounded w-3/5"></div>
+                <div className="h-3 bg-gray-700 rounded animate-pulse" style={{animationDelay: '0.4s'}}></div>
+                <div className="h-3 bg-gray-700 rounded w-4/5 animate-pulse" style={{animationDelay: '0.6s'}}></div>
               </div>
             </div>
           ))}
@@ -151,18 +147,18 @@ const Projects = () => {
       <div className="max-w-2xl mx-auto">
         <div className="inline-flex items-center gap-3 bg-gray-800/50 backdrop-blur-sm border border-gray-700 rounded-full px-6 py-3 mb-8">
           <Sparkles className="w-5 h-5 text-cyan-400 animate-pulse" />
-          <span className="text-cyan-400 text-sm font-medium tracking-wider uppercase">Coming Soon</span>
+          <span className="text-cyan-400 text-sm font-medium tracking-wider uppercase">Portfolio Under Construction</span>
         </div>
         
         <h3 className="text-4xl lg:text-5xl font-bold mb-6">
-          <span className="bg-gradient-to-r from-white to-gray-300 bg-clip-text text-transparent">
-            No Projects Found
+          <span className="bg-gradient-to-r from-white to-gray-400 bg-clip-text text-transparent">
+            Amazing Things Are Coming Soon
           </span>
         </h3>
         
-        <p className="text-xl text-gray-400 leading-relaxed mb-8">
-          We're preparing our showcase of extraordinary projects and innovative media solutions. 
-          Our portfolio of groundbreaking campaigns and strategic partnerships will be available soon.
+        <p className="text-lg text-gray-400 leading-relaxed mb-10">
+          We're busy crafting our showcase of extraordinary projects and innovative media solutions. 
+          Our portfolio of groundbreaking campaigns will be available here shortly.
         </p>
 
         <div className="flex justify-center gap-4">
@@ -173,13 +169,14 @@ const Projects = () => {
       </div>
     </div>
   );
+  // --- End of Empty State Component ---
 
   if (loading) {
     return (
       <div className="min-h-screen bg-black text-white flex items-center justify-center">
         <div className="text-center">
           <Loader className="w-12 h-12 animate-spin mx-auto mb-4 text-cyan-400" />
-          <p className="text-lg text-gray-300">Loading projects...</p>
+          <p className="text-lg text-gray-300">Loading our portfolio...</p>
         </div>
       </div>
     );
@@ -188,7 +185,6 @@ const Projects = () => {
   return (
     <div className="min-h-screen bg-black text-white">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-24 pb-16">
-        {/* Page Header */}
         <div className="text-center mb-12">
           <h1 className="text-4xl sm:text-5xl lg:text-6xl font-bold bg-gradient-to-r from-cyan-400 via-pink-500 to-purple-600 bg-clip-text text-transparent pb-4">
             Our Project Portfolio
@@ -214,7 +210,6 @@ const Projects = () => {
         )}
 
         <div className={`grid grid-cols-1 ${projects.length > 10 ? 'lg:grid-cols-4' : 'lg:grid-cols-1'} gap-8`}>
-          {/* Mobile Filter Button - Only show if there are more than 10 projects */}
           {projects.length > 10 && (
             <div className="lg:hidden mb-4">
               <button
@@ -227,13 +222,10 @@ const Projects = () => {
             </div>
           )}
 
-          {/* Sidebar - Only show if there are more than 10 projects */}
           {projects.length > 10 && (
             <aside className={`lg:col-span-1 space-y-8 ${isFilterOpen ? 'block' : 'hidden'} lg:block`}>
               <div className="p-6 bg-gray-800/50 border border-gray-700 rounded-2xl">
                 <h3 className="text-xl font-bold mb-6">Filters</h3>
-                
-                {/* Category Filter */}
                 <div>
                   <h4 className="font-semibold mb-4">Category</h4>
                   <div className="space-y-2">
@@ -260,22 +252,19 @@ const Projects = () => {
             </aside>
           )}
 
-          {/* Main Content */}
           <main className={projects.length > 10 ? "lg:col-span-3" : "lg:col-span-1"}>
-            {/* Disabled Search Bar - Hidden when no projects */}
             {projects.length > 0 && (
               <div className="relative mb-8 opacity-50 pointer-events-none">
                 <Search className="absolute left-4 top-1/2 -translate-y-1/2 text-gray-400" size={20} />
                 <input
                   type="text"
-                  placeholder="Search disabled - projects loading..."
+                  placeholder="Search disabled..."
                   disabled
                   className="w-full bg-gray-800/30 border border-gray-700/50 rounded-xl py-3 pl-12 pr-4 outline-none transition cursor-not-allowed"
                 />
               </div>
             )}
 
-            {/* Projects Grid */}
             {!loading && !error && displayedProjects.length > 0 && (
               <>
                 <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-2 gap-8">
@@ -285,21 +274,15 @@ const Projects = () => {
                       className="group relative"
                       ref={index === displayedProjects.length - 1 ? lastProjectRef : null}
                     >
-                      {/* Glowing border effect */}
                       <div className="absolute -inset-0.5 bg-gradient-to-r from-cyan-500 to-pink-600 rounded-3xl blur opacity-0 group-hover:opacity-30 transition duration-1000"></div>
-                      
                       <div className="relative bg-gradient-to-br from-gray-900 to-gray-800 rounded-3xl overflow-hidden border border-gray-700 hover:border-gray-600 transition-all duration-500">
                         <div className="relative overflow-hidden">
                            <img 
                              src={project.image || project.images?.[0] || 'https://images.unsplash.com/photo-1605810230434-7631ac76ec81?w=800&h=600&fit=crop'}
                              alt={project.title}
                              className="w-full h-64 object-cover group-hover:scale-110 transition-transform duration-700"
-                             onError={(e) => {
-                               e.currentTarget.src = 'https://images.unsplash.com/photo-1605810230434-7631ac76ec81?w=800&h=600&fit=crop';
-                             }}
+                             onError={(e) => { e.currentTarget.src = 'https://images.unsplash.com/photo-1605810230434-7631ac76ec81?w=800&h=600&fit=crop'; }}
                            />
-                          
-                          {/* Overlay */}
                           <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/20 to-transparent opacity-0 group-hover:opacity-100 transition-all duration-500">
                             <div className="absolute bottom-4 left-4 right-4 flex justify-between items-end">
                               <div className="flex gap-3">
@@ -313,20 +296,16 @@ const Projects = () => {
                               <ArrowUpRight className="w-6 h-6 text-white/80" />
                             </div>
                           </div>
-                          
-                          {/* Category badge */}
                           <div className="absolute top-4 left-4">
                             <div className="bg-gradient-to-r from-cyan-500 to-pink-600 px-3 py-1 rounded-full">
                               <span className="text-white text-xs font-semibold">{project.category}</span>
                             </div>
                           </div>
                         </div>
-                        
                         <div className="p-6">
                           <h3 className="text-xl font-bold text-white mb-2 group-hover:text-transparent group-hover:bg-gradient-to-r group-hover:bg-clip-text group-hover:from-cyan-400 group-hover:to-pink-500 transition-all duration-300">
                             {project.title}
                           </h3>
-                          {/* <p className="text-sm text-gray-400 mb-2">Client: {project.client}</p> */}
                           <p className="text-gray-400 leading-relaxed group-hover:text-gray-300 transition-colors line-clamp-3">
                             {project.description}
                           </p>
@@ -339,7 +318,6 @@ const Projects = () => {
                   ))}
                 </div>
 
-                {/* Lazy Loading Indicator */}
                 {loadingMore && (
                   <div className="text-center py-8">
                     <Loader className="w-8 h-8 animate-spin mx-auto mb-4 text-cyan-400" />
@@ -347,7 +325,6 @@ const Projects = () => {
                   </div>
                 )}
 
-                {/* End of results indicator */}
                 {!hasMore && displayedProjects.length > ITEMS_PER_PAGE && (
                   <div className="text-center py-8">
                     <p className="text-gray-400">You've reached the end of our projects!</p>
@@ -356,7 +333,7 @@ const Projects = () => {
               </>
             )}
 
-            {/* Beautiful Empty State */}
+            {/* --- MODIFIED: Render EmptyState when no projects are displayed --- */}
             {!loading && !error && displayedProjects.length === 0 && (
               <EmptyState />
             )}
@@ -368,4 +345,3 @@ const Projects = () => {
 };
 
 export default Projects;
-

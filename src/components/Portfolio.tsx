@@ -3,7 +3,7 @@ import { ExternalLink, Play, ArrowUpRight, Sparkles, FolderOpen } from 'lucide-r
 import { apiRequestJson } from '@/utils/api';
 
 interface Project {
-  id: string;
+  _id: string;
   title: string;
   category: string;
   description: string;
@@ -66,7 +66,7 @@ const Portfolio = () => {
         <div className="flex animate-[slide-in-right_3s_ease-in-out_infinite] space-x-8">
           {[...Array(3)].map((_, index) => (
             <div
-              key={index}
+              key={`empty-card-${index}`}
               className="flex-shrink-0 w-80 h-48 bg-gradient-to-br from-gray-900 to-gray-800 rounded-3xl border border-gray-700 p-6 transform hover:scale-105 transition-transform duration-300"
             >
               <div className="flex items-center gap-3 mb-4">
@@ -85,41 +85,6 @@ const Portfolio = () => {
               </div>
             </div>
           ))}
-        </div>
-      </div>
-
-      <div className="max-w-2xl mx-auto">
-        <div className="inline-flex items-center gap-3 bg-gray-800/50 backdrop-blur-sm border border-gray-700 rounded-full px-6 py-3 mb-8">
-          <Sparkles className="w-5 h-5 text-cyan-400 animate-pulse" />
-          <span className="text-cyan-400 text-sm font-medium tracking-wider uppercase">Coming Soon</span>
-        </div>
-        
-        <h3 className="text-4xl lg:text-5xl font-bold mb-6">
-          <span className="bg-gradient-to-r from-white to-gray-300 bg-clip-text text-transparent">
-            50+ Brands Trust Us
-          </span>
-        </h3>
-        
-        <p className="text-xl text-gray-400 leading-relaxed mb-8">
-          We've partnered with industry leaders and innovative startups to deliver exceptional results. 
-          Here are just some of the amazing brands we've had the privilege to work with.
-        </p>
-        
-        {/* Brand Logos Collage */}
-        <div className="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-6 gap-8 mt-12 opacity-60">
-          {[...Array(12)].map((_, index) => (
-            <div key={index} className="aspect-square bg-gradient-to-br from-gray-800 to-gray-700 rounded-2xl flex items-center justify-center border border-gray-600 hover:border-primary/30 transition-all group">
-              <div className="text-gray-400 group-hover:text-primary transition-colors text-xs font-medium">
-                BRAND {index + 1}
-              </div>
-            </div>
-          ))}
-        </div>
-
-        <div className="flex justify-center gap-4">
-          <div className="w-3 h-3 bg-cyan-400 rounded-full animate-bounce" style={{ animationDelay: '0ms' }}></div>
-          <div className="w-3 h-3 bg-pink-400 rounded-full animate-bounce" style={{ animationDelay: '150ms' }}></div>
-          <div className="w-3 h-3 bg-purple-400 rounded-full animate-bounce" style={{ animationDelay: '300ms' }}></div>
         </div>
       </div>
     </div>
@@ -160,7 +125,7 @@ const Portfolio = () => {
           <>
             <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
               {projects.map((project, index) => (
-                <div key={project.id} className="group relative">
+                <div key={project._id} className="group relative">
                   {/* Glowing border effect */}
                   <div className={`absolute -inset-0.5 bg-gradient-to-r ${gradients[index % gradients.length]} rounded-3xl blur opacity-0 group-hover:opacity-30 transition duration-1000`}></div>
                   
@@ -231,4 +196,3 @@ const Portfolio = () => {
 };
 
 export default Portfolio;
-
