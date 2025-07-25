@@ -1,7 +1,6 @@
 import React, { useState } from 'react';
-import { Plus, Video, Image, Settings as SettingsIcon, Moon, Sun, BarChart3, Users, Calendar, Search } from 'lucide-react';
-import VideoManagement from './VideoManagement';
-import ProjectManagement from './ProjectManagement';
+import { Plus, Video, Image, Settings as SettingsIcon, Moon, Sun, BarChart3, Users, Calendar, Search, FileText } from 'lucide-react';
+import PostManagement from './PostManagement';
 import Dashboard from './Dashboard';
 import UserManagement from './UserManagement';
 import Settings from './Settings';
@@ -24,8 +23,7 @@ const AdminPanel = () => {
   const tabs = [
     { id: 'dashboard', label: 'Dashboard', icon: BarChart3 },
     { id: 'users', label: 'Users', icon: Users },
-    { id: 'videos', label: 'Videos', icon: Video },
-    { id: 'projects', label: 'Projects', icon: Image },
+    { id: 'posts', label: 'Posts', icon: FileText },
     { id: 'settings', label: 'Settings', icon: SettingsIcon }
   ];
 
@@ -44,10 +42,8 @@ const AdminPanel = () => {
         return <Dashboard isDarkMode={isDarkMode} themeClasses={themeClasses} />;
       case 'users':
         return <UserManagement isDarkMode={isDarkMode} themeClasses={themeClasses} />;
-      case 'videos':
-        return <VideoManagement isDarkMode={isDarkMode} themeClasses={themeClasses} />;
-      case 'projects':
-        return <ProjectManagement isDarkMode={isDarkMode} themeClasses={themeClasses} />;
+      case 'posts':
+        return <PostManagement isDarkMode={isDarkMode} themeClasses={themeClasses} />;
       case 'settings':
         return <Settings isDarkMode={isDarkMode} themeClasses={themeClasses} />;
       default:

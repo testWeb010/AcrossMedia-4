@@ -7,6 +7,7 @@ import Videos from './pages/Videos';
 import Projects from './pages/Projects';
 import Team from './pages/Team';
 import IPDetail from './pages/IPDetail';
+import PostView from './pages/PostView';
 import AdminPanel from './components/admin/AdminPanel';
 import Login from './components/auth/Login';
 import Signup from './components/auth/Signup';
@@ -36,6 +37,7 @@ const AppContent = () => {
         <Route path="/about" element={<About />} />
         <Route path="/contact" element={<Contact />} />
         <Route path="/ip/:id" element={<IPDetail />} />
+        <Route path="/post/:id" element={<PostView />} />
         <Route path="/login" element={<Login />} />
         <Route path="/signup" element={<Signup />} />
         <Route path="/forgot-password" element={<ForgotPassword />} />
