@@ -1,112 +1,181 @@
-import React, { useState } from 'react';
+import React, { useState, useRef, useEffect } from 'react';
 import { Play, ArrowRight, Sparkles } from 'lucide-react';
 import YouTube from 'react-youtube';
+import { motion, useScroll, useTransform, Variants } from 'framer-motion';
+
+// --- A simple hook to detect screen size for conditional animations ---
+const useMediaQuery = (query: string) => {
+  const [matches, setMatches] = useState(false);
+
+  useEffect(() => {
+    const media = window.matchMedia(query);
+    if (media.matches !== matches) {
+      setMatches(media.matches);
+    }
+    const listener = () => {
+      setMatches(media.matches);
+    };
+    window.addEventListener('resize', listener);
+    return () => window.removeEventListener('resize', listener);
+  }, [matches, query]);
+
+  return matches;
+};
+
+// --- Framer Motion Animation Variants (work on all devices) ---
+const containerVariants: Variants = {
+  hidden: { opacity: 0 },
+  visible: {
+    opacity: 1,
+    transition: { staggerChildren: 0.15, delayChildren: 0.2 },
+  },
+};
+
+const itemVariants: Variants = {
+  hidden: { opacity: 0, y: 30 },
+  visible: {
+    opacity: 1,
+    y: 0,
+    transition: { type: 'spring', stiffness: 100, damping: 12 },
+  },
+};
 
 const Hero = () => {
   const [isPlaying, setIsPlaying] = useState(false);
+  const targetRef = useRef<HTMLElement>(null);
+  
+  const isDesktop = useMediaQuery('(min-width: 1024px)');
+
+  const { scrollYProgress } = useScroll({
+    target: isDesktop ? targetRef : undefined,
+    offset: ['start start', 'end start'],
+  });
+
+  // These hooks are always called at the top level
+  const yText = useTransform(scrollYProgress, [0, 1], ['0%', '50%']);
+  const yVideo = useTransform(scrollYProgress, [0, 1], ['0%', '-30%']);
+  const opacityVideo = useTransform(scrollYProgress, [0, 0.8, 1], [1, 1, 0]);
+  const scaleVideo = useTransform(scrollYProgress, [0, 1], [1, 0.9]);
+
+  // FIX: Move the other useTransform calls here to be unconditional.
+  const yBlob1 = useTransform(scrollYProgress, [0, 1], ['0%', '-50%']);
+  const yBlob2 = useTransform(scrollYProgress, [0, 1], ['0%', '40%']);
 
   const videoId = '0P8ftvWlCUQ';
-
   const opts = {
     height: '100%',
     width: '100%',
-    playerVars: {
-      autoplay: 1,
-      controls: 1,
-      modestbranding: 1,
-      rel: 0,
-    },
+    playerVars: { autoplay: 1, controls: 1, modestbranding: 1, rel: 0 },
   };
+
   return (
-    <section className="relative min-h-screen bg-gradient-to-br from-gray-900 via-black to-gray-900 overflow-hidden">
-      {/* Animated background elements */}
-      <div className="absolute inset-0">
-        <div className="absolute top-1/4 left-1/4 w-96 h-96 bg-cyan-500/10 rounded-full blur-3xl animate-pulse"></div>
-        <div className="absolute bottom-1/4 right-1/4 w-96 h-96 bg-pink-500/10 rounded-full blur-3xl animate-pulse delay-1000"></div>
-        <div className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 w-[800px] h-[800px] bg-gradient-to-r from-cyan-500/5 to-pink-500/5 rounded-full blur-3xl"></div>
+    <section ref={targetRef} className="relative min-h-screen bg-black overflow-hidden">
+      {/* Background elements */}
+      <div className="absolute inset-0 z-0">
+        <div className="absolute top-0 left-0 w-full h-full bg-gradient-to-br from-gray-900 via-black to-gray-900"></div>
+        <div className="absolute inset-0 bg-[linear-gradient(rgba(255,255,255,0.03)_1px,transparent_1px),linear-gradient(90deg,rgba(255,255,255,0.03)_1px,transparent_1px)] bg-[size:60px_60px] opacity-50"></div>
+        
+        {/* FIX: Use the results of the hooks conditionally, not the hooks themselves */}
+        <motion.div
+          className="absolute top-1/4 left-1/4 w-72 h-72 md:w-96 md:h-96 bg-cyan-500/10 rounded-full blur-3xl"
+          style={isDesktop ? { y: yBlob1 } : {}}
+        ></motion.div>
+        <motion.div
+          className="absolute bottom-1/4 right-1/4 w-72 h-72 md:w-96 md:h-96 bg-pink-500/10 rounded-full blur-3xl"
+          style={isDesktop ? { y: yBlob2 } : {}}
+        ></motion.div>
       </div>
 
-      {/* Grid pattern overlay */}
-      <div className="absolute inset-0 bg-[linear-gradient(rgba(255,255,255,0.02)_1px,transparent_1px),linear-gradient(90deg,rgba(255,255,255,0.02)_1px,transparent_1px)] bg-[size:100px_100px]"></div>
+      <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div className="grid lg:grid-cols-2 gap-12 lg:gap-16 lg:items-center min-h-screen pt-28 pb-20 lg:pt-0 lg:pb-0">
+          
+          {/* Left Side: Text Content (Responsive) */}
+          <motion.div
+            style={isDesktop ? { y: yText } : {}}
+            variants={containerVariants}
+            initial="hidden"
+            animate="visible"
+            className="space-y-8 md:space-y-10 z-10 text-center lg:text-left"
+          >
+            <motion.div variants={itemVariants} className="flex items-center justify-center lg:justify-start gap-3">
+              <Sparkles className="w-6 h-6 text-cyan-400" />
+              <span className="text-cyan-400 text-sm font-medium tracking-wider uppercase">Creative Excellence</span>
+            </motion.div>
+            
+            <motion.h1 variants={itemVariants} className="text-5xl md:text-6xl lg:text-7xl font-bold leading-tight">
+              <span className="bg-gradient-to-r from-white via-gray-100 to-gray-300 bg-clip-text text-transparent">
+                We are
+              </span>
+              <br />
+              <span className="bg-gradient-to-r from-cyan-400 via-pink-500 to-purple-600 bg-clip-text text-transparent">
+                Across Media
+              </span>
+            </motion.h1>
+            
+            <motion.p variants={itemVariants} className="text-lg md:text-xl text-gray-300 leading-relaxed max-w-lg mx-auto lg:mx-0">
+              We specialise in <span className="text-white font-semibold">Branded Content</span>, 
+              <span className="text-white font-semibold"> Celebrity Engagement</span>, 
+              <span className="text-white font-semibold"> Sponsorships</span>, and 
+              <span className="text-white font-semibold"> IPs</span>.
+            </motion.p>
 
-      <div className="relative max-w-7xl mx-auto px-6 lg:px-8 pt-32 pb-20">
-        <div className="grid lg:grid-cols-2 gap-16 items-center min-h-[80vh]">
-          <div className="space-y-10">
-            <div className="space-y-6">
-              <div className="flex items-center gap-3 mb-8">
-                <Sparkles className="w-6 h-6 text-cyan-400" />
-                <span className="text-cyan-400 text-sm font-medium tracking-wider uppercase">Creative Excellence</span>
-              </div>
-              
-              <h1 className="text-6xl lg:text-7xl font-bold leading-tight">
-                <span className="bg-gradient-to-r from-white via-gray-100 to-gray-300 bg-clip-text text-transparent">
-                  We are
-                </span>
-                <br />
-                <span className="bg-gradient-to-r from-cyan-400 via-pink-500 to-purple-600 bg-clip-text text-transparent">
-                  Across Media
-                </span>
-              </h1>
-              
-              <p className="text-xl text-gray-300 leading-relaxed max-w-lg">
-                We specialise in <span className="text-white font-semibold">Branded Content Creation</span>, 
-                <span className="text-white font-semibold"> Celebrity Engagement</span>, 
-                <span className="text-white font-semibold"> Sponsorships</span> and 
-                <span className="text-white font-semibold"> IPs</span>.
-              </p>
-            </div>
-
-            <div className="flex flex-col sm:flex-row gap-6">
-              <button onClick={() => setIsPlaying(true)} className="group relative overflow-hidden bg-gradient-to-r from-cyan-500 to-pink-600 text-white px-8 py-4 rounded-2xl font-semibold transition-all duration-300 hover:shadow-2xl hover:shadow-cyan-500/25 hover:scale-105 inline-block">
-                <div className="absolute inset-0 bg-gradient-to-r from-cyan-400 to-pink-500 opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
-                <div className="relative flex items-center gap-3">
-                  <Play size={20} />
-                  <span>Watch more</span>
-                  <ArrowRight size={16} className="group-hover:translate-x-1 transition-transform" />
-                </div>
+            <motion.div variants={itemVariants} className="flex flex-col sm:flex-row gap-4 justify-center lg:justify-start">
+              <button
+                onClick={() => setIsPlaying(true)}
+                className="group relative inline-flex items-center justify-center px-6 py-3.5 sm:px-8 sm:py-4 font-semibold text-white bg-gradient-to-r from-cyan-500 to-pink-600 rounded-2xl overflow-hidden transition-all duration-300 hover:scale-105 hover:shadow-2xl hover:shadow-cyan-500/25"
+              >
+                <div className="absolute inset-0 bg-black opacity-0 group-hover:opacity-20 transition-opacity duration-300"></div>
+                <Play size={20} className="mr-2" />
+                <span>Watch More</span>
               </button>
               
-              <button className="group border-2 border-gray-600 text-gray-300 px-8 py-4 rounded-2xl font-semibold hover:border-cyan-400 hover:text-white transition-all duration-300 hover:shadow-lg hover:shadow-cyan-400/20">
+              <button className="group relative inline-flex items-center justify-center px-6 py-3.5 sm:px-8 sm:py-4 font-semibold text-gray-300 bg-transparent border-2 border-gray-700 rounded-2xl transition-all duration-300 hover:text-white hover:border-cyan-400 hover:bg-cyan-400/10">
                 <span>Get Started</span>
               </button>
-            </div>
+            </motion.div>
+          </motion.div>
 
-          
-          </div>
-
-          <div className="relative group">
-            <div className="relative bg-gradient-to-br from-gray-800 to-gray-900 rounded-3xl overflow-hidden border border-gray-700 aspect-video">
+          {/* Right Side: Video Player (Responsive) */}
+          <motion.div
+            style={isDesktop ? { y: yVideo, opacity: opacityVideo, scale: scaleVideo } : {}}
+            variants={itemVariants}
+            initial="hidden"
+            animate="visible"
+            className="relative w-full max-w-lg mx-auto"
+          >
+            <div className="relative bg-gradient-to-br from-gray-800/50 to-gray-900/50 rounded-3xl overflow-hidden border border-gray-700 aspect-video p-2 backdrop-blur-sm">
               {isPlaying ? (
-                <YouTube videoId={videoId} opts={opts} className="absolute inset-0 w-full h-full" />
+                <YouTube videoId={videoId} opts={opts} className="absolute inset-0 w-full h-full rounded-2xl overflow-hidden" />
               ) : (
-                <div onClick={() => setIsPlaying(true)} className="cursor-pointer">
-                  <img src={`https://i.ytimg.com/vi/${videoId}/maxresdefault.jpg`} alt="Hero Video Thumbnail" className="absolute inset-0 w-full h-full object-cover" />
-                  <div className="absolute inset-0 bg-black/50"></div>
+                <div onClick={() => setIsPlaying(true)} className="cursor-pointer group">
+                  <img src={`https://i.ytimg.com/vi/${videoId}/maxresdefault.jpg`} alt="Hero Video Thumbnail" className="absolute inset-0 w-full h-full object-cover rounded-2xl" />
+                  <div className="absolute inset-0 bg-black/40 rounded-2xl"></div>
                   <div className="absolute inset-0 flex items-center justify-center">
-                    <div className="relative text-center text-white z-10">
-                      <div className="w-20 h-20 bg-black/10 backdrop-blur-md border border-white/20 rounded-full flex items-center justify-center mx-auto mb-6 cursor-pointer hover:scale-110 transition-all duration-300">
-                        <Play size={40} fill="white" />
-                      </div>
-                      <h3 className="text-2xl font-bold mb-2">Our Intro Video</h3>
-                      <p className="text-gray-300">Discover what we do</p>
+                    <div className="w-16 h-16 sm:w-20 sm:h-20 bg-white/10 backdrop-blur-md border border-white/20 rounded-full flex items-center justify-center cursor-pointer transition-all duration-300 group-hover:scale-110 group-hover:bg-white/20">
+                      <div className="w-16 h-16 sm:w-20 sm:h-20 rounded-full animate-ping absolute bg-white/20 opacity-75"></div>
+                      <Play fill="white" className="text-white h-8 w-8 sm:h-9 sm:w-9" />
                     </div>
                   </div>
                 </div>
               )}
             </div>
-          </div>
+          </motion.div>
         </div>
       </div>
 
       {/* Scroll indicator */}
-      <div className="absolute bottom-8 left-1/2 transform -translate-x-1/2">
-        <div className="w-6 h-10 border-2 border-gray-600 rounded-full flex justify-center">
-          <div className="w-1 h-3 bg-gradient-to-b from-cyan-400 to-pink-500 rounded-full mt-2 animate-bounce"></div>
-        </div>
+      <div className="absolute bottom-6 left-1/2 -translate-x-1/2">
+        <motion.div
+            animate={{ y: [0, 8, 0] }}
+            transition={{ duration: 1.5, repeat: Infinity, ease: 'easeInOut' }}
+        >
+            <div className="w-6 h-10 border-2 border-gray-600 rounded-full flex justify-center p-1">
+                <div className="w-1 h-2 bg-white rounded-full"></div>
+            </div>
+        </motion.div>
       </div>
     </section>
   );
 };
 
 export default Hero;
-

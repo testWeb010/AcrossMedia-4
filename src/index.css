@@ -8,6 +8,8 @@
 All colors MUST be HSL.
 */
 
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;700;800&display=swap');
+
 @layer base {
   :root {
     --background: 210 30% 8%;
@@ -284,5 +286,32 @@ button:active {
 
 .scrollbar-hide::-webkit-scrollbar {
   display: none;
+}
+
+
+
+body {
+  @apply bg-black text-neutral-200; /* Use black for seamless background */
+}
+
+/* Add this CSS for the Parallax component */
+.parallax {
+  overflow: hidden;
+  letter-spacing: -2px;
+  line-height: 0.8;
+  margin: 0;
+  white-space: nowrap;
+  display: flex;
+  flex-wrap: nowrap;
+}
+
+.parallax .scroller {
+  font-weight: 600;
+  text-transform: uppercase;
+  font-size: 64px;
+  display: flex;
+  white-space: nowrap;
+  display: flex;
+  flex-wrap: nowrap;
 }
 

@@ -55,22 +55,18 @@ router.get('/', async (req, res) => {
     const skip = (page - 1) * limit;
     const search = req.query.search || '';
     const category = req.query.category || '';
-    const status = req.query.status || '';
 
     // Build query
     let query = {};
     if (search) {
       query.$or = [
         { title: { $regex: search, $options: 'i' } },
-        { description: { $regex: search, $options: 'i' } },
-        { client: { $regex: search, $options: 'i' } }
+        { description: { $regex: search, $options: 'i' } }
+        // { client: { $regex: search, $options: 'i' } }
       ];
     }
     if (category && category !== 'all') {
       query.category = category;
-    }
-    if (status && status !== 'all') {
-      query.status = status;
     }
 
     const projects = await db.collection('projects')
@@ -101,10 +97,10 @@ router.get('/', async (req, res) => {
 router.post('/', verifyAdmin, async (req, res) => {
   try {
     const db = getDb().connection;
-    const { title, description, image, category, status, keywords, client } = req.body;
+    const { title, description, image, category, keywords } = req.body;
 
-    if (!title || !description || !category || !client) {
-      return res.status(400).json({ message: 'Title, description, category, and client are required' });
+    if (!title || !description || !category) {
+      return res.status(400).json({ message: 'Title, description, category are required' });
     }
 
     const newProject = {
@@ -112,9 +108,7 @@ router.post('/', verifyAdmin, async (req, res) => {
       description,
       image: image || "https://images.pexels.com/photos/3184300/pexels-photo-3184300.jpeg?auto=compress&cs=tinysrgb&w=800",
       category,
-      status: status || 'ongoing',
       keywords: keywords || [],
-      client,
       createdAt: new Date().toISOString(),
       createdBy: req.user.userId
     };
@@ -134,7 +128,7 @@ router.put('/:id', verifyAdmin, async (req, res) => {
   try {
     const db = getDb().connection;
     const projectId = req.params.id;
-    const { title, description, image, category, status, keywords, client } = req.body;
+    const { title, description, image, category, keywords, } = req.body;
 
     if (!ObjectId.isValid(projectId)) {
       return res.status(400).json({ message: 'Invalid project ID' });
@@ -150,9 +144,7 @@ router.put('/:id', verifyAdmin, async (req, res) => {
       description,
       image: image || project.image,
       category,
-      status: status || project.status,
       keywords: keywords || [],
-      client,
       updatedAt: new Date().toISOString(),
       updatedBy: req.user.userId
     };

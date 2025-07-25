@@ -1,7 +1,8 @@
 import React from 'react';
-import { motion } from 'framer-motion';
-import { Linkedin, Twitter, Mail, Award, Users, Star } from 'lucide-react';
+import { motion, Variants } from 'framer-motion';
+import { Linkedin, Twitter, Mail, Award, Users, Star, Key } from 'lucide-react';
 
+// Team member data structure - no changes needed here
 interface TeamMember {
   id: string;
   name: string;
@@ -14,211 +15,178 @@ interface TeamMember {
   achievements: string[];
 }
 
-const Team = () => {
-  const teamMembers: TeamMember[] = [
+const teamMembers: TeamMember[] = [
     {
       id: '1',
-      name: 'Sarah Johnson',
-      role: 'Creative Director',
-      description: 'With over 10 years of experience in creative strategy and brand development, Sarah leads our creative vision with passion and innovation. She has worked with Fortune 500 companies and emerging startups alike.',
-      image: 'https://images.unsplash.com/photo-1494790108755-2616b612b950?w=400&h=400&fit=crop&crop=face',
+      name: 'Vartika',
+      role: 'Marketing & Partnerships Head',
+      description: 'An IIM Grad who loves everything but management! Meet Vartika – Our lead on Programming and Content. ‘I am not up for sale, so don’t publish my bio’, she insists. So we dare upset our head of Programming and continue to write about her! Period.',
+      image: 'https://www.acrossmedia.in/wp-content/uploads/2022/09/team-5.jpg',
       linkedin: '#',
       twitter: '#',
-      email: 'sarah@acrossmedia.com',
+      email: 'vartika@acrossmedia.com',
       achievements: ['Creative Excellence Award 2023', 'Brand Strategy Leader', '15+ Years Experience']
     },
     {
       id: '2',
-      name: 'Michael Chen',
-      role: 'Technical Director',
-      description: 'Michael brings cutting-edge technical expertise to every project. His background in software engineering and media technology ensures our solutions are both innovative and reliable.',
-      image: 'https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?w=400&h=400&fit=crop&crop=face',
+      name: 'Soma Chandra',
+      role: 'Brand Solutions Lead',
+      description: 'Tired of getting run-of-the mill proposals from her media and creative agencies, Soma saw the business opportunity for kick-starting an authentic & effective brand solutions enterprise. Rest, as they say, is history. Credited with launching alcohol beverages like Carlsberg and Tuborg in a Marketing career that spans over a decade, Soma has managed and led creative and media processes with agencies like Leo Burnett, M&C Saatchi Scarecrow and Starcom. Thanks to her diverse marketing background of leading marketing initiatives for brands like Domino’s, Daawat Basmati Rice, Freshlook Color-contact lenses amongst others, Soma is adept at identifying brand’s key challenges, and equally skilled at crafting effective solutions as well. An avid traveler, she lives by the mantra of ‘stop at nothing’.',
+      image: 'https://www.acrossmedia.in/wp-content/uploads/2022/09/team-1.jpg',
       linkedin: '#',
       twitter: '#',
-      email: 'michael@acrossmedia.com',
+      email: 'soma@acrossmedia.in',
       achievements: ['Tech Innovation Award', 'Full-Stack Expert', '50+ Projects Delivered']
     },
     {
       id: '3',
-      name: 'Emily Rodriguez',
+      name: 'Roheet Chaddha',
       role: 'Project Manager',
-      description: 'Emily ensures every project runs smoothly from conception to delivery. Her exceptional organizational skills and client relationship management make her an invaluable team leader.',
-      image: 'https://images.unsplash.com/photo-1438761681033-6461ffad8d80?w=400&h=400&fit=crop&crop=face',
+      description: 'His soft-skills, networking abilities & media relationships could have made him India’s leading Public Relations executive, but Roheet had different plans.In his career spanning 18 years, Roheet has led teams at the Country’s best experiential & media organisation such as Wizcraft International, Entertainment Network India (part of Times of India), Times Television and Hindustan Times. His heavily decorated chest wears medals of Iconic IPRs like Channel V Awards, India International Film Festival, Film Fare Awards, Femina Miss India, HT Leadership Summit, JK Racing Championship, India Fashion Week, to name a few.',
+      image: 'https://www.acrossmedia.in/wp-content/uploads/2022/09/team-6.jpg',
       linkedin: '#',
       twitter: '#',
-      email: 'emily@acrossmedia.com',
+      email: 'roheet@acrossmedia.com',
       achievements: ['PMP Certified', 'Client Satisfaction 98%', 'Team Leadership Expert']
     },
     {
       id: '4',
-      name: 'David Thompson',
-      role: 'Content Strategist',
-      description: 'David crafts compelling narratives that resonate with audiences across all platforms. His expertise in digital storytelling and content marketing drives engagement and results.',
-      image: 'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=400&h=400&fit=crop&crop=face',
+      name: 'Chetan Pratap',
+      role: 'Revenue & Sponsorships Head',
+      description: 'After an honour’s degree in Business Economics and an MBA from a premier college, one would aspire for a meaty role at an MNC. But, over everything else, Chetan chose Hindi copywriting at an Advertising Agency! Fast forward by 15 years – today he is on the speed-dial of India’s best Marketeers, churning out Branded Solutions for them and helping them solve their Business & Marketing challenges. And when his not doing that, you find him write White Papers on Marketing or teach at a B-School.A little bird tells us Chetan also helps his Bollywood writer-friends with their Screenplay. But why should that bother anyone, as long as the complimentary movie tickets keep flowing in to the team!',
+      image: 'https://www.acrossmedia.in/wp-content/uploads/2022/09/team-7.jpg',
       linkedin: '#',
       twitter: '#',
-      email: 'david@acrossmedia.com',
+      email: 'chetan@acrossmedia.com',
       achievements: ['Content Marketing Expert', 'Award-Winning Campaigns', 'Multi-Platform Specialist']
     }
   ];
 
-  const containerVariants = {
-    hidden: { opacity: 0 },
-    visible: {
-      opacity: 1,
-      transition: {
-        staggerChildren: 0.2
-      }
-    }
-  };
+// Framer Motion Variants
+const containerVariants: Variants = {
+  hidden: { opacity: 0 },
+  visible: {
+    opacity: 1,
+    transition: { staggerChildren: 0.2 }
+  }
+};
 
-  const itemVariants = {
-    hidden: { opacity: 0, y: 50 },
-    visible: {
-      opacity: 1,
-      y: 0,
-      transition: {
-        duration: 0.6
-      }
-    }
-  };
+const itemVariants: Variants = {
+  hidden: { opacity: 0, y: 30 },
+  visible: {
+    opacity: 1,
+    y: 0,
+    transition: { duration: 0.5, type: 'spring', stiffness: 100 }
+  }
+};
 
+const Team = () => {
   return (
     <div className="min-h-screen bg-black text-white">
       {/* Hero Section */}
-      <section className="pt-32 pb-20 bg-gradient-to-br from-gray-900 via-black to-gray-900 relative overflow-hidden">
-        {/* Background Effects */}
-        <div className="absolute inset-0">
-          <div className="absolute top-1/4 left-1/4 w-96 h-96 bg-primary/5 rounded-full blur-3xl"></div>
-          <div className="absolute bottom-1/4 right-1/4 w-96 h-96 bg-purple-500/5 rounded-full blur-3xl"></div>
-        </div>
+      <section className="pt-36 pb-24 text-center relative">
+        {/* Subtle background glow */}
+        <div className="absolute inset-0 -z-10 bg-black bg-[radial-gradient(ellipse_80%_80%_at_50%_-20%,rgba(224,38,129,0.2),rgba(255,255,255,0))]"></div>
 
-        <div className="relative max-w-7xl mx-auto px-6 lg:px-8 text-center">
-          <motion.div
-            initial={{ opacity: 0, y: 30 }}
+        <div className="max-w-4xl mx-auto px-4">
+          <motion.h1 
+            className="text-5xl md:text-7xl font-bold tracking-tight"
+            initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.8 }}
           >
-            <div className="inline-flex items-center gap-2 bg-gray-800/50 backdrop-blur-sm border border-gray-700 rounded-full px-6 py-3 mb-8">
-              <Users className="w-5 h-5 text-primary" />
-              <span className="text-primary text-sm font-medium tracking-wider uppercase">Meet Our Team</span>
-            </div>
-            
-            <h1 className="text-5xl lg:text-7xl font-bold mb-6">
-              <span className="bg-gradient-to-r from-white to-gray-300 bg-clip-text text-transparent">
-                Creative Minds Behind
-              </span>
-              <br />
-              <span className="bg-gradient-to-r from-primary to-purple-500 bg-clip-text text-transparent">
-                Across Media
-              </span>
-            </h1>
-            
-            <p className="text-xl text-gray-400 max-w-3xl mx-auto leading-relaxed">
-              Our diverse team of creative professionals brings together years of experience, 
-              innovative thinking, and a passion for delivering exceptional results for every client.
-            </p>
-          </motion.div>
+            Creative Minds Behind<br />
+            <span className="text-pink-500">Across Media</span>
+          </motion.h1>
+          <motion.p 
+            className="mt-6 text-lg md:text-xl text-gray-400 max-w-2xl mx-auto"
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.8, delay: 0.1 }}
+          >
+            Our diverse team of creative professionals brings together years of experience, 
+            innovative thinking, and a passion for delivering exceptional results for every client.
+          </motion.p>
         </div>
       </section>
 
       {/* Team Members Section */}
       <section className="py-20 bg-black">
-        <div className="max-w-7xl mx-auto px-6 lg:px-8">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <motion.div
-            className="grid md:grid-cols-2 gap-12"
+            className="grid grid-cols-1 md:grid-cols-2 gap-x-8 gap-y-12"
             variants={containerVariants}
             initial="hidden"
-            animate="visible"
+            whileInView="visible"
+            viewport={{ once: true, amount: 0.2 }}
           >
             {teamMembers.map((member, index) => (
               <motion.div
                 key={member.id}
-                className="group relative"
                 variants={itemVariants}
+                // Apply the gradient border wrapper to the last item, as in the screenshot
+                className={index === teamMembers.length - 1 ? "p-px bg-gradient-to-br from-pink-500 to-cyan-400 rounded-3xl" : ""}
               >
-                {/* Glowing border effect */}
-                <div className="absolute -inset-0.5 bg-gradient-to-r from-primary to-purple-600 rounded-3xl blur opacity-0 group-hover:opacity-30 transition duration-1000"></div>
-                
-                <div className="relative bg-gradient-to-br from-gray-900 to-gray-800 rounded-3xl overflow-hidden border border-gray-700 hover:border-gray-600 transition-all duration-500">
-                  <div className="p-8">
-                    <div className="flex flex-col lg:flex-row gap-6">
-                      {/* Profile Image */}
-                      <div className="relative">
-                        <div className="w-32 h-32 lg:w-40 lg:h-40 rounded-2xl overflow-hidden">
-                          <img
-                            src={member.image}
-                            alt={member.name}
-                            className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700"
-                          />
-                        </div>
-                        
-                        {/* Status Indicator */}
-                        <div className="absolute -bottom-2 -right-2 w-8 h-8 bg-green-500 rounded-full border-4 border-gray-800 flex items-center justify-center">
-                          <div className="w-2 h-2 bg-white rounded-full animate-pulse"></div>
-                        </div>
-                      </div>
-
-                      {/* Member Info */}
-                      <div className="flex-1 space-y-4">
-                        <div>
-                          <h3 className="text-2xl font-bold text-white mb-1 group-hover:text-transparent group-hover:bg-gradient-to-r group-hover:bg-clip-text group-hover:from-primary group-hover:to-purple-500 transition-all duration-300">
-                            {member.name}
-                          </h3>
-                          <p className="text-primary font-semibold text-lg">{member.role}</p>
-                        </div>
-
-                        <p className="text-gray-400 leading-relaxed">
-                          {member.description}
-                        </p>
-
-                        {/* Achievements */}
-                        <div className="space-y-2">
-                          <h4 className="text-sm font-semibold text-gray-300 flex items-center gap-2">
-                            <Award size={16} className="text-yellow-400" />
-                            Key Achievements
-                          </h4>
-                          <div className="flex flex-wrap gap-2">
-                            {member.achievements.map((achievement, idx) => (
-                              <span
-                                key={idx}
-                                className="px-3 py-1 bg-gray-700/50 text-gray-300 rounded-full text-xs border border-gray-600"
-                              >
-                                {achievement}
-                              </span>
-                            ))}
-                          </div>
-                        </div>
-
-                        {/* Social Links */}
-                        <div className="flex gap-3 pt-2">
-                          {member.linkedin && (
-                            <a
-                              href={member.linkedin}
-                              className="w-10 h-10 bg-blue-600/20 border border-blue-500/30 rounded-xl flex items-center justify-center hover:bg-blue-600/30 transition-colors"
-                            >
-                              <Linkedin size={18} className="text-blue-400" />
-                            </a>
-                          )}
-                          {member.twitter && (
-                            <a
-                              href={member.twitter}
-                              className="w-10 h-10 bg-sky-600/20 border border-sky-500/30 rounded-xl flex items-center justify-center hover:bg-sky-600/30 transition-colors"
-                            >
-                              <Twitter size={18} className="text-sky-400" />
-                            </a>
-                          )}
-                          {member.email && (
-                            <a
-                              href={`mailto:${member.email}`}
-                              className="w-10 h-10 bg-gray-600/20 border border-gray-500/30 rounded-xl flex items-center justify-center hover:bg-gray-600/30 transition-colors"
-                            >
-                              <Mail size={18} className="text-gray-400" />
-                            </a>
-                          )}
-                        </div>
-                      </div>
+                <div className="h-full bg-slate-900 rounded-3xl p-6 md:p-8">
+                  <div className="flex flex-col sm:flex-row items-start gap-6">
+                    <div className="flex-shrink-0">
+                      <img
+                        className="h-24 w-24 md:h-28 md:w-28 rounded-2xl object-cover"
+                        src={member.image}
+                        alt={member.name}
+                      />
                     </div>
+                    <div className="flex-1">
+                      <h3 className="text-2xl font-bold text-white">{member.name}</h3>
+                      <p className="text-pink-500 font-semibold text-md mt-1">{member.role}</p>
+                    </div>
+                  </div>
+
+                  <p className="mt-6 text-gray-400 leading-relaxed text-sm">
+                    {member.description}
+                  </p>
+
+                  <div className="mt-8">
+                    <h4 className="text-sm font-semibold text-gray-300 flex items-center gap-2">
+                      <Key size={16} className="text-yellow-400" />
+                      Key Achievements
+                    </h4>
+                    <div className="flex flex-wrap gap-2 mt-3">
+                      {member.achievements.map((achievement) => (
+                        <span
+                          key={achievement}
+                          className="px-3 py-1 bg-slate-800 text-slate-300 rounded-full text-xs border border-slate-700"
+                        >
+                          {achievement}
+                        </span>
+                      ))}
+                    </div>
+                  </div>
+
+                  <div className="mt-8 flex items-center gap-3">
+                    {/* LinkedIn with status indicator */}
+                    {member.linkedin && (
+                      <a href={member.linkedin} className="relative group">
+                        <div className="w-10 h-10 bg-slate-800 border border-slate-700 rounded-full flex items-center justify-center transition-all duration-300 group-hover:border-cyan-400">
+                          <Linkedin size={18} className="text-slate-400 group-hover:text-cyan-400 transition-colors" />
+                        </div>
+                        <span className="absolute top-0 right-0 block h-3 w-3 rounded-full bg-green-400 ring-2 ring-slate-900" />
+                      </a>
+                    )}
+                    {member.twitter && (
+                      <a href={member.twitter} className="group">
+                        <div className="w-10 h-10 bg-slate-800 border border-slate-700 rounded-full flex items-center justify-center transition-all duration-300 group-hover:border-cyan-400">
+                          <Twitter size={18} className="text-slate-400 group-hover:text-cyan-400 transition-colors" />
+                        </div>
+                      </a>
+                    )}
+                    {member.email && (
+                      <a href={`mailto:${member.email}`} className="group">
+                        <div className="w-10 h-10 bg-slate-800 border border-slate-700 rounded-full flex items-center justify-center transition-all duration-300 group-hover:border-cyan-400">
+                          <Mail size={18} className="text-slate-400 group-hover:text-cyan-400 transition-colors" />
+                        </div>
+                      </a>
+                    )}
                   </div>
                 </div>
               </motion.div>
@@ -228,41 +196,44 @@ const Team = () => {
       </section>
 
       {/* Team Stats Section */}
-      <section className="py-20 bg-gradient-to-br from-gray-900 to-black">
-        <div className="max-w-7xl mx-auto px-6 lg:px-8">
+      <section className="py-20 bg-black">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <motion.div
             className="text-center mb-16"
-            initial={{ opacity: 0, y: 30 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.8 }}
+            initial={{ opacity: 0, y: 20 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true }}
+            transition={{ duration: 0.6 }}
           >
-            <h2 className="text-4xl lg:text-5xl font-bold mb-6">
-              <span className="bg-gradient-to-r from-white to-gray-300 bg-clip-text text-transparent">
-                Our Impact Together
-              </span>
+            <h2 className="text-4xl lg:text-5xl font-bold">
+              Our Impact Together
             </h2>
           </motion.div>
 
-          <div className="grid md:grid-cols-4 gap-8">
+          <motion.div 
+            className="grid grid-cols-2 md:grid-cols-4 gap-4 md:gap-8"
+            variants={containerVariants}
+            initial="hidden"
+            whileInView="visible"
+            viewport={{ once: true, amount: 0.3 }}
+          >
             {[
-              { label: 'Projects Completed', value: '150+', icon: Award },
-              { label: 'Happy Clients', value: '50+', icon: Users },
-              { label: 'Team Experience', value: '40+ Years', icon: Star },
-              { label: 'Success Rate', value: '98%', icon: Award }
-            ].map((stat, index) => (
+              { label: 'Projects Completed', value: '150+', Icon: Award },
+              { label: 'Happy Clients', value: '50+', Icon: Users },
+              { label: 'Team Experience', value: '40+ Years', Icon: Star },
+              { label: 'Success Rate', value: '98%', Icon: Award } // Using Award as per screenshot
+            ].map((stat) => (
               <motion.div
-                key={index}
-                className="text-center p-6 bg-gradient-to-br from-gray-800 to-gray-900 rounded-2xl border border-gray-700"
-                initial={{ opacity: 0, scale: 0.8 }}
-                animate={{ opacity: 1, scale: 1 }}
-                transition={{ duration: 0.6, delay: index * 0.1 }}
+                key={stat.label}
+                variants={itemVariants}
+                className="text-center p-6 bg-slate-900 rounded-2xl border border-slate-800"
               >
-                <stat.icon className="w-8 h-8 text-primary mx-auto mb-4" />
-                <div className="text-3xl font-bold text-white mb-2">{stat.value}</div>
-                <div className="text-gray-400">{stat.label}</div>
+                <stat.Icon className="w-8 h-8 text-pink-500 mx-auto mb-4" />
+                <div className="text-3xl font-bold text-white mb-1">{stat.value}</div>
+                <div className="text-sm text-gray-400">{stat.label}</div>
               </motion.div>
             ))}
-          </div>
+          </motion.div>
         </div>
       </section>
     </div>

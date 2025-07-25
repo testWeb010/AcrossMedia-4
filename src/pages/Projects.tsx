@@ -8,10 +8,8 @@ interface Project {
   title: string;
   description: string;
   category: string;
-  client: string;
   image?: string;
   images?: string[];
-  status: 'active' | 'draft' | 'completed' | 'ongoing' | 'upcoming';
   createdAt: string;
   updatedAt?: string;
   keywords?: string[];
@@ -328,7 +326,7 @@ const Projects = () => {
                           <h3 className="text-xl font-bold text-white mb-2 group-hover:text-transparent group-hover:bg-gradient-to-r group-hover:bg-clip-text group-hover:from-cyan-400 group-hover:to-pink-500 transition-all duration-300">
                             {project.title}
                           </h3>
-                          <p className="text-sm text-gray-400 mb-2">Client: {project.client}</p>
+                          {/* <p className="text-sm text-gray-400 mb-2">Client: {project.client}</p> */}
                           <p className="text-gray-400 leading-relaxed group-hover:text-gray-300 transition-colors line-clamp-3">
                             {project.description}
                           </p>
