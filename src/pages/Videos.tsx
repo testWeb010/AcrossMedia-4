@@ -1,5 +1,6 @@
 import React, { useState, useMemo, useEffect } from 'react';
 import { Search, Play, ChevronLeft, ChevronRight, ListFilter, MoreVertical, Share2, Copy, AlertCircle, Loader } from 'lucide-react';
+import { useNavigate } from 'react-router-dom';
 import { formatTimeAgo } from '@/lib/utils';
 import { apiRequestJson } from '@/utils/api';
 import { fetchYouTubeVideoData, extractVideoId, formatViews } from '@/utils/youtube';
@@ -23,13 +24,13 @@ const categories = ['All', 'Corporate', 'Branding', 'Celebrity'];
 const ITEMS_PER_PAGE = 6;
 
 const Videos = () => {
+  const navigate = useNavigate();
   const [videos, setVideos] = useState<Video[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
   const [searchTerm, setSearchTerm] = useState('');
   const [activeCategory, setActiveCategory] = useState('All');
   const [sortOrder, setSortOrder] = useState('newest');
-  const [selectedVideo, setSelectedVideo] = useState<string | null>(null);
   const [currentPage, setCurrentPage] = useState(1);
   const [isFilterOpen, setIsFilterOpen] = useState(false);
   const [openShareMenu, setOpenShareMenu] = useState<string | null>(null);
@@ -241,7 +242,7 @@ const Videos = () => {
                     <div key={video._id} className="bg-gray-800/30 p-4 rounded-2xl group transition-all duration-300 hover:bg-gray-800/60 hover:shadow-lg hover:shadow-cyan-500/10">
                       <div 
                         className="relative rounded-xl overflow-hidden cursor-pointer mb-4"
-                        onClick={() => setSelectedVideo(videoId)}
+                        onClick={() => navigate(`/post/${video._id}?type=video`)}
                       >
                         <img
                           src={video.thumbnailUrl || `https://i.ytimg.com/vi/${videoId}/hqdefault.jpg`}
@@ -259,7 +260,7 @@ const Videos = () => {
                         <div className='flex-1'>
                            <h3 
                             className="text-md font-bold text-white leading-snug mb-1 clamp-2-lines cursor-pointer hover:text-cyan-300 transition-colors"
-                            onClick={() => setSelectedVideo(videoId)}
+                            onClick={() => navigate(`/post/${video._id}?type=video`)}
                           >
                             {video.title}
                           </h3>
@@ -352,30 +353,6 @@ const Videos = () => {
         </div>
       </div>
 
-      {/* Modal for Video Player */}
-      {selectedVideo && (
-        <div
-          className="fixed inset-0 bg-black/80 backdrop-blur-sm flex items-center justify-center z-50"
-          onClick={() => setSelectedVideo(null)}
-        >
-          <div className="relative w-full max-w-4xl aspect-video mx-4" onClick={e => e.stopPropagation()}>
-            <iframe
-              src={`https://www.youtube.com/embed/${selectedVideo}?autoplay=1&controls=1&rel=0`}
-              title="YouTube video player"
-              frameBorder="0"
-              allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
-              allowFullScreen
-              className="w-full h-full rounded-2xl shadow-2xl shadow-cyan-500/50"
-            ></iframe>
-            <button
-              onClick={() => setSelectedVideo(null)}
-              className="absolute -top-4 -right-4 w-10 h-10 bg-white text-black rounded-full flex items-center justify-center hover:scale-110 transition-transform text-2xl font-bold"
-            >
-              &times;
-            </button>
-          </div>
-        </div>
-      )}
     </div>
   );
 };

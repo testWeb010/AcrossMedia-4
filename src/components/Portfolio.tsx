@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { ExternalLink, Play, ArrowUpRight, Sparkles, FolderOpen } from 'lucide-react';
+import { useNavigate } from 'react-router-dom';
 import { apiRequestJson } from '@/utils/api';
 
 interface Project {
@@ -16,6 +17,7 @@ const Portfolio = () => {
   const [projects, setProjects] = useState<Project[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
+  const navigate = useNavigate();
 
   const gradients = [
     "from-cyan-500 to-pink-600",
@@ -125,7 +127,11 @@ const Portfolio = () => {
           <>
             <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
               {projects.map((project, index) => (
-                <div key={project._id} className="group relative">
+                <div 
+                  key={project._id} 
+                  className="group relative cursor-pointer"
+                  onClick={() => navigate(`/post/${project._id}?type=project`)}
+                >
                   {/* Glowing border effect */}
                   <div className={`absolute -inset-0.5 bg-gradient-to-r ${gradients[index % gradients.length]} rounded-3xl blur opacity-0 group-hover:opacity-30 transition duration-1000`}></div>
                   
@@ -147,10 +153,22 @@ const Portfolio = () => {
                       <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/20 to-transparent opacity-0 group-hover:opacity-100 transition-all duration-500">
                         <div className="absolute bottom-4 left-4 right-4 flex justify-between items-end">
                           <div className="flex gap-3">
-                            <button className="w-12 h-12 bg-white/10 backdrop-blur-sm rounded-full flex items-center justify-center hover:bg-white/20 transition-colors border border-white/20">
+                            <button 
+                              className="w-12 h-12 bg-white/10 backdrop-blur-sm rounded-full flex items-center justify-center hover:bg-white/20 transition-colors border border-white/20"
+                              onClick={(e) => {
+                                e.stopPropagation();
+                                navigate(`/post/${project._id}?type=project`);
+                              }}
+                            >
                               <Play size={20} className="text-white" />
                             </button>
-                            <button className="w-12 h-12 bg-white/10 backdrop-blur-sm rounded-full flex items-center justify-center hover:bg-white/20 transition-colors border border-white/20">
+                            <button 
+                              className="w-12 h-12 bg-white/10 backdrop-blur-sm rounded-full flex items-center justify-center hover:bg-white/20 transition-colors border border-white/20"
+                              onClick={(e) => {
+                                e.stopPropagation();
+                                navigate(`/post/${project._id}?type=project`);
+                              }}
+                            >
                               <ExternalLink size={20} className="text-white" />
                             </button>
                           </div>

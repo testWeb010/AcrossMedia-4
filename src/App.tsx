@@ -39,7 +39,7 @@ const AppContent = () => {
         {/* <Route path="/ip/:id" element={<IPDetail />} /> */}
         
         {/* === THIS IS THE CORRECTED LINE === */}
-        <Route path="/posts/:id" element={<PostView />} /> 
+        <Route path="/post/:id" element={<PostView />} />
         
         <Route path="/login" element={<Login />} />
         <Route path="/signup" element={<Signup />} />
