@@ -6,6 +6,7 @@ import { Input } from '../ui/input';
 import { Card, CardContent, CardHeader, CardTitle } from '../ui/card';
 import { Alert, AlertDescription } from '../ui/alert';
 import { Badge } from '../ui/badge';
+import SecurityEducation from './SecurityEducation';
 
 interface CaptchaChallenge {
   id: string;
@@ -372,6 +373,7 @@ const SecureLogin: React.FC = () => {
                 <CheckCircle className="h-3 w-3 text-green-500" />
                 <span className="text-xs text-green-600">SSL/TLS Secured</span>
               </div>
+              <SecurityEducation />
             </div>
 
             {/* Help Link */}

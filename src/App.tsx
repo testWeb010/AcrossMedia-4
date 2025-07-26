@@ -1,3 +1,5 @@
+// App.tsx
+
 import React from 'react';
 import { BrowserRouter as Router, Routes, Route, useLocation } from 'react-router-dom';
 import Index from './pages/Index';
@@ -6,7 +8,7 @@ import Contact from './components/Contact';
 import Videos from './pages/Videos';
 import Projects from './pages/Projects';
 import Team from './pages/Team';
-import IPDetail from './pages/IPDetail';
+// import IPDetail from './pages/IPDetail';
 import PostView from './pages/PostView';
 import AdminPanel from './components/admin/AdminPanel';
 import Login from './components/auth/Login';
@@ -21,9 +23,7 @@ import Footer from './components/Footer';
 const AppContent = () => {
   const location = useLocation();
   const isAdminPage = location.pathname.startsWith('/acs-admin');
-  const isAuthPage = ['/login', '/signup', '/forgot-password', '/pending-approval'].includes(location.pathname);
-
-  // Hide header and footer on admin pages and auth pages
+  const isAuthPage = ['/login', '/signup', 'forgot-password', '/pending-approval'].includes(location.pathname);
   const showHeaderFooter = !isAdminPage && !isAuthPage;
 
   return (
@@ -36,13 +36,22 @@ const AppContent = () => {
         <Route path="/team" element={<Team />} />
         <Route path="/about" element={<About />} />
         <Route path="/contact" element={<Contact />} />
-        <Route path="/ip/:id" element={<IPDetail />} />
-        <Route path="/post/:id" element={<PostView />} />
+        {/* <Route path="/ip/:id" element={<IPDetail />} /> */}
+        
+        {/* === THIS IS THE CORRECTED LINE === */}
+        <Route path="/posts/:id" element={<PostView />} /> 
+        
         <Route path="/login" element={<Login />} />
         <Route path="/signup" element={<Signup />} />
         <Route path="/forgot-password" element={<ForgotPassword />} />
         <Route path="/pending-approval" element={<PendingApproval />} />
         <Route path="/acs-admin" element={
+          <ProtectedRoute>
+            <AdminPanel />
+          </ProtectedRoute>
+        } />
+        {/* It's good practice to have your AdminPanel route point to a base path like /acs-admin/* to handle sub-routes */}
+        <Route path="/acs-admin/*" element={ 
           <ProtectedRoute>
             <AdminPanel />
           </ProtectedRoute>
@@ -63,4 +72,3 @@ function App() {
 }
 
 export default App;
-

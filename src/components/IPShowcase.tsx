@@ -333,7 +333,7 @@ const IPShowcase = () => {
                     {/* View Image Button */}
                     <div className="absolute top-8 right-8">
                       <div className="flex items-center gap-2 bg-black/20 backdrop-blur-md border border-white/20 rounded-full px-4 py-2 text-white group-hover:bg-primary/20 group-hover:border-primary/30 transition-all">
-                        <span className="text-sm font-medium">View Image</span>
+                        <span className="text-sm font-medium">View Details</span>
                         <ArrowUpRight size={16} />
                       </div>
                     </div>
