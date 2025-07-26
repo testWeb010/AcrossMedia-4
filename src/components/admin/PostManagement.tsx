@@ -302,27 +302,30 @@ const PostManagement = ({ isDarkMode, themeClasses }: { isDarkMode: boolean; the
                              {formData.thumbnail && <img src={formData.thumbnail} alt="Video thumbnail" className="w-32 h-18 mt-3 object-cover rounded-lg border border-gray-600"/>}
                          </div>
                      )}
-                     {postTypeToAdd === 'project' && (
-                         <div>
-                             <label className={`block text-sm font-semibold ${themeClasses.text} mb-2`}>Project Image</label>
-                             <div className={`border-2 border-dashed ${themeClasses.border} rounded-xl p-8 text-center`}>
-                                 {formData.imagePreview ? (
-                                 <div className="relative inline-block">
-                                     <img src={formData.imagePreview} alt="Preview" className="max-h-48 mx-auto rounded-lg" />
-                                     <button type="button" onClick={() => setFormData({...formData, image: null, imagePreview: ''})} className="absolute top-2 right-2 p-1 bg-red-500 text-white rounded-full hover:bg-red-600 transition-colors"><X size={16} /></button>
-                                 </div>
-                                 ) : (
-                                 <div>
-                                     <Upload size={48} className={`${themeClasses.textSecondary} mx-auto mb-4`} />
-                                     <input type="file" accept="image/*" onChange={handleImageChange} className="hidden" id="image-upload" />
-                                     <label htmlFor="image-upload" className="cursor-pointer inline-flex items-center gap-2 px-4 py-2 bg-gradient-to-r from-cyan-500 to-pink-600 text-white rounded-lg hover:shadow-lg transition-all">
-                                     <Upload size={16} /> Choose File
-                                     </label>
-                                 </div>
-                                 )}
-                             </div>
-                         </div>
-                     )}
+                      {postTypeToAdd === 'project' && (
+                          <>
+                              <input type="text" value={formData.client} onChange={(e) => setFormData({...formData, client: e.target.value})} className={`w-full px-4 py-3 ${themeClasses.cardBg} ${themeClasses.border} border rounded-xl ${themeClasses.text} focus:ring-2 focus:ring-cyan-500 transition-all`} placeholder="Client name" required />
+                              <div>
+                                  <label className={`block text-sm font-semibold ${themeClasses.text} mb-2`}>Project Image</label>
+                                  <div className={`border-2 border-dashed ${themeClasses.border} rounded-xl p-8 text-center`}>
+                                      {formData.imagePreview ? (
+                                      <div className="relative inline-block">
+                                          <img src={formData.imagePreview} alt="Preview" className="max-h-48 mx-auto rounded-lg" />
+                                          <button type="button" onClick={() => setFormData({...formData, image: null, imagePreview: ''})} className="absolute top-2 right-2 p-1 bg-red-500 text-white rounded-full hover:bg-red-600 transition-colors"><X size={16} /></button>
+                                      </div>
+                                      ) : (
+                                      <div>
+                                          <Upload size={48} className={`${themeClasses.textSecondary} mx-auto mb-4`} />
+                                          <input type="file" accept="image/*" onChange={handleImageChange} className="hidden" id="image-upload" />
+                                          <label htmlFor="image-upload" className="cursor-pointer inline-flex items-center gap-2 px-4 py-2 bg-gradient-to-r from-cyan-500 to-pink-600 text-white rounded-lg hover:shadow-lg transition-all">
+                                          <Upload size={16} /> Choose File
+                                          </label>
+                                      </div>
+                                      )}
+                                  </div>
+                              </div>
+                          </>
+                      )}
                      <button type="submit" className="flex items-center gap-2 px-6 py-3 bg-gradient-to-r from-cyan-500 to-pink-600 text-white rounded-xl hover:shadow-lg hover:shadow-cyan-500/25 transition-all">
                          {postTypeToAdd === 'video' ? <Video size={20} /> : <Image size={20} />}
                          <span>{editingPost ? 'Save Changes' : `Add ${postTypeToAdd}`}</span>
@@ -372,93 +375,222 @@ const PostManagement = ({ isDarkMode, themeClasses }: { isDarkMode: boolean; the
 
 // --- REVAMPED CARD COMPONENTS ---
 
-const VideoCard = ({ video, themeClasses, onDelete, onEdit }: { video: VideoPost, themeClasses: ThemeClasses, onDelete: () => void, onEdit: () => void }) => (
-    <div className={`${themeClasses.cardBg} rounded-2xl ${themeClasses.border} border hover:border-cyan-500/50 transition-all flex flex-col h-full`}>
-      <div className="p-6 flex flex-col flex-grow">
-        {/* Card Header */}
-        <div className="flex justify-between items-start mb-4">
-          <h3 className={`text-lg font-bold ${themeClasses.text} line-clamp-2 pr-4`}>{video.title}</h3>
-          <div className="flex items-center gap-2 flex-shrink-0">
-              <button onClick={onEdit} className={`p-2 ${themeClasses.hover} rounded-lg transition-colors`}><Edit size={16} className={themeClasses.textSecondary} /></button>
-              <button onClick={onDelete} className={`p-2 ${themeClasses.hover} rounded-lg transition-colors`}><Trash2 size={16} className="text-red-400" /></button>
+const VideoCard = ({ video, themeClasses, onDelete, onEdit }: { video: VideoPost, themeClasses: ThemeClasses, onDelete: () => void, onEdit: () => void }) => {
+  const [youtubeData, setYoutubeData] = useState<any>(null);
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    const fetchYouTubeData = async () => {
+      try {
+        if (video.url) {
+          const data = await fetchYouTubeVideoData(video.url);
+          setYoutubeData(data);
+        }
+      } catch (error) {
+        console.error('Error fetching YouTube data:', error);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchYouTubeData();
+  }, [video.url]);
+
+  const videoId = extractVideoId(video.url);
+  const thumbnail = videoId ? getVideoThumbnail(videoId) : '';
+
+  return (
+    <div className={`${themeClasses.cardBg} rounded-2xl overflow-hidden ${themeClasses.border} border group hover:shadow-lg hover:shadow-cyan-500/10 transition-all h-full flex flex-col`}>
+      {/* Video Thumbnail */}
+      <div className="relative aspect-video bg-gray-800">
+        {thumbnail ? (
+          <img src={thumbnail} alt={video.title} className="w-full h-full object-cover" />
+        ) : (
+          <div className="w-full h-full flex items-center justify-center bg-gray-800">
+            <Video size={48} className="text-gray-600" />
           </div>
+        )}
+        <div className="absolute top-3 left-3">
+          <span className="px-2 py-1 bg-red-600 text-white text-xs font-medium rounded flex items-center gap-1">
+            <Youtube size={12} />
+            Video
+          </span>
         </div>
-  
-        {/* Category */}
-        <div className="mb-4">
-          <span className="bg-gradient-to-r from-cyan-500 to-blue-600 text-white px-3 py-1 rounded-full text-xs font-semibold">{video.category}</span>
-        </div>
-  
-        {/* Content Body - this part will grow */}
-        <div className="flex-grow">
-          <p className={`${themeClasses.textSecondary} mb-4 line-clamp-3 text-sm`}>{video.description || 'No description available.'}</p>
+        {youtubeData?.duration && (
+          <div className="absolute bottom-3 right-3">
+            <span className="px-2 py-1 bg-black/70 text-white text-xs rounded">
+              {youtubeData.duration}
+            </span>
+          </div>
+        )}
+        {/* Hover overlay for edit/delete */}
+        <div className="absolute inset-0 bg-black/40 opacity-0 group-hover:opacity-100 transition-all duration-300 flex items-center justify-center">
+          <div className="flex gap-3">
+            <button onClick={onEdit} className="w-12 h-12 bg-white/10 backdrop-blur-sm rounded-full flex items-center justify-center hover:bg-white/20 border border-white/20">
+              <Edit size={20} className="text-white" />
+            </button>
+            <button onClick={onDelete} className="w-12 h-12 bg-white/10 backdrop-blur-sm rounded-full flex items-center justify-center hover:bg-white/20 border border-white/20">
+              <Trash2 size={20} className="text-red-400" />
+            </button>
+          </div>
         </div>
       </div>
-      
-      {/* Card Footer - always at the bottom */}
-      <div className="border-t border-white/10 p-6">
-        <div className="flex items-center justify-between text-sm">
-          <div className="flex items-center gap-4">
-            <div className="flex items-center gap-2">
-              <Eye size={14} className={themeClasses.textSecondary} />
-              <span className={themeClasses.textSecondary}>{video.views || 'N/A'} views</span>
-            </div>
-            <div className="flex items-center gap-2">
-              <Calendar size={14} className={themeClasses.textSecondary} />
-              <span className={themeClasses.textSecondary}>{new Date(video.createdAt).toLocaleDateString()}</span>
+
+      {/* Video Content */}
+      <div className="p-4 flex-grow flex flex-col">
+        <div className="flex items-start justify-between mb-2">
+          <h3 className={`font-semibold ${themeClasses.text} line-clamp-2 flex-1 mr-2`}>
+            {video.title}
+          </h3>
+          <span className={`px-2 py-1 bg-cyan-500/20 text-cyan-400 text-xs rounded shrink-0`}>
+            {video.category}
+          </span>
+        </div>
+
+        <p className={`${themeClasses.textSecondary} text-sm mb-3 line-clamp-2 flex-grow`}>
+          {video.description}
+        </p>
+
+        {/* Video Stats */}
+        <div className="flex items-center gap-4 mb-3 text-sm">
+          <div className="flex items-center gap-1">
+            <Eye size={14} className="text-gray-400" />
+            <span className={themeClasses.textSecondary}>
+              {loading ? 'Loading...' : (youtubeData?.views || video.views || 'N/A')} views
+            </span>
+          </div>
+          <div className="flex items-center gap-1">
+            <Calendar size={14} className="text-gray-400" />
+            <span className={themeClasses.textSecondary}>
+              {new Date(video.createdAt).toLocaleDateString()}
+            </span>
+          </div>
+        </div>
+
+        {/* Keywords */}
+        {video.keywords.length > 0 && (
+          <div className="mb-3">
+            <div className="flex flex-wrap gap-1">
+              {video.keywords.slice(0, 2).map((keyword, index) => (
+                <span key={index} className={`px-2 py-0.5 ${themeClasses.border} border rounded text-xs ${themeClasses.textSecondary}`}>
+                  {keyword}
+                </span>
+              ))}
+              {video.keywords.length > 2 && (
+                <span className={`px-2 py-0.5 ${themeClasses.textSecondary} text-xs`}>
+                  +{video.keywords.length - 2} more
+                </span>
+              )}
             </div>
           </div>
-          <Link to={`/posts/${video._id}?type=video`} className="flex items-center gap-2 text-cyan-400 hover:text-cyan-300 transition-colors font-semibold">
-            <ExternalLink size={14} />
-            <span>View</span>
+        )}
+
+        {/* Actions */}
+        <div className="flex items-center justify-center pt-3 border-t border-gray-700 mt-auto">
+          <Link
+            to={`/post/${video._id}?type=video`}
+            className="flex items-center gap-2 text-cyan-400 hover:text-cyan-300 transition-colors text-sm font-medium"
+          >
+            <ExternalLink size={16} />
+            View Details
           </Link>
         </div>
       </div>
     </div>
   );
+};
   
-  const ProjectCard = ({ project, themeClasses, onDelete, onEdit }: { project: ProjectPost, themeClasses: ThemeClasses, onDelete: () => void, onEdit: () => void }) => (
-    <div className={`group relative ${themeClasses.cardBg} rounded-2xl overflow-hidden ${themeClasses.border} border hover:border-emerald-500/50 transition-all duration-300 h-full flex flex-col`}>
-      {/* Image Container */}
-      <div className="relative h-48 overflow-hidden">
-          <img src={project.image} alt={project.title} className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" />
-          {/* Edit/Delete overlay on hover */}
-          <div className="absolute inset-0 bg-black/40 opacity-0 group-hover:opacity-100 transition-all duration-300 flex items-center justify-center">
-              <div className="flex gap-3">
-                  <button onClick={onEdit} className="w-12 h-12 bg-white/10 backdrop-blur-sm rounded-full flex items-center justify-center hover:bg-white/20 border border-white/20"><Edit size={20} className="text-white" /></button>
-                  <button onClick={onDelete} className="w-12 h-12 bg-white/10 backdrop-blur-sm rounded-full flex items-center justify-center hover:bg-white/20 border border-white/20"><Trash2 size={20} className="text-red-400" /></button>
-              </div>
-          </div>
+const ProjectCard = ({ project, themeClasses, onDelete, onEdit }: { project: ProjectPost, themeClasses: ThemeClasses, onDelete: () => void, onEdit: () => void }) => (
+  <div className={`group relative ${themeClasses.cardBg} rounded-2xl overflow-hidden ${themeClasses.border} border hover:border-emerald-500/50 transition-all duration-300 h-full flex flex-col`}>
+    {/* Image Container */}
+    <div className="relative aspect-video overflow-hidden bg-gray-800">
+      {project.image ? (
+        <img src={project.image} alt={project.title} className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" />
+      ) : (
+        <div className="w-full h-full flex items-center justify-center bg-gray-800">
+          <Image size={48} className="text-gray-600" />
+        </div>
+      )}
+      <div className="absolute top-3 left-3">
+        <span className="px-2 py-1 bg-emerald-600 text-white text-xs font-medium rounded flex items-center gap-1">
+          <Image size={12} />
+          Project
+        </span>
       </div>
-  
-      {/* Content Area */}
-      <div className="p-6 flex-grow flex flex-col">
-          {/* Category */}
-          <div className="mb-4">
-            <span className="bg-emerald-500/20 text-emerald-400 px-3 py-1 rounded-full text-xs font-semibold">{project.category}</span>
-          </div>
-          
-          {/* Title and Description */}
-          <div className="flex-grow">
-            <h3 className={`text-lg font-bold ${themeClasses.text} mb-2 line-clamp-2`}>{project.title}</h3>
-            <p className={`${themeClasses.textSecondary} text-sm mb-4 line-clamp-2`}>{project.description || 'No description available'}</p>
-          </div>
-  
-          {/* Footer - Pushed to the bottom */}
-          <div className="mt-auto pt-4 border-t border-white/10">
-            <div className="flex items-center justify-between text-sm">
-                <div className="flex items-center gap-2">
-                    <Calendar size={14} className={themeClasses.textSecondary} />
-                    <span className={themeClasses.textSecondary}>{new Date(project.createdAt).toLocaleDateString()}</span>
-                </div>
-                <Link to={`/posts/${project._id}?type=project`} className="flex items-center gap-2 text-cyan-400 hover:text-cyan-300 transition-colors font-semibold">
-                    <ExternalLink size={14} />
-                    <span>View</span>
-                </Link>
-            </div>
-          </div>
+      {/* Edit/Delete overlay on hover */}
+      <div className="absolute inset-0 bg-black/40 opacity-0 group-hover:opacity-100 transition-all duration-300 flex items-center justify-center">
+        <div className="flex gap-3">
+          <button onClick={onEdit} className="w-12 h-12 bg-white/10 backdrop-blur-sm rounded-full flex items-center justify-center hover:bg-white/20 border border-white/20">
+            <Edit size={20} className="text-white" />
+          </button>
+          <button onClick={onDelete} className="w-12 h-12 bg-white/10 backdrop-blur-sm rounded-full flex items-center justify-center hover:bg-white/20 border border-white/20">
+            <Trash2 size={20} className="text-red-400" />
+          </button>
+        </div>
       </div>
     </div>
-  );
+
+    {/* Content Area */}
+    <div className="p-4 flex-grow flex flex-col">
+      <div className="flex items-start justify-between mb-2">
+        <h3 className={`font-semibold ${themeClasses.text} line-clamp-2 flex-1 mr-2`}>
+          {project.title}
+        </h3>
+        <span className={`px-2 py-1 bg-emerald-500/20 text-emerald-400 text-xs rounded shrink-0`}>
+          {project.category}
+        </span>
+      </div>
+
+      <p className={`${themeClasses.textSecondary} text-sm mb-3 line-clamp-2 flex-grow`}>
+        {project.description}
+      </p>
+
+      {/* Project Info */}
+      <div className="flex items-center gap-4 mb-3 text-sm">
+        <div className="flex items-center gap-1">
+          <Tag size={14} className="text-gray-400" />
+          <span className={themeClasses.textSecondary}>
+            {project.client || 'Client'}
+          </span>
+        </div>
+        <div className="flex items-center gap-1">
+          <Calendar size={14} className="text-gray-400" />
+          <span className={themeClasses.textSecondary}>
+            {new Date(project.createdAt).toLocaleDateString()}
+          </span>
+        </div>
+      </div>
+
+      {/* Keywords */}
+      {project.keywords.length > 0 && (
+        <div className="mb-3">
+          <div className="flex flex-wrap gap-1">
+            {project.keywords.slice(0, 2).map((keyword, index) => (
+              <span key={index} className={`px-2 py-0.5 ${themeClasses.border} border rounded text-xs ${themeClasses.textSecondary}`}>
+                {keyword}
+              </span>
+            ))}
+            {project.keywords.length > 2 && (
+              <span className={`px-2 py-0.5 ${themeClasses.textSecondary} text-xs`}>
+                +{project.keywords.length - 2} more
+              </span>
+            )}
+          </div>
+        </div>
+      )}
+
+      {/* Actions */}
+      <div className="flex items-center justify-center pt-3 border-t border-gray-700 mt-auto">
+        <Link
+          to={`/post/${project._id}?type=project`}
+          className="flex items-center gap-2 text-emerald-400 hover:text-emerald-300 transition-colors text-sm font-medium"
+        >
+          <ExternalLink size={16} />
+          View Details
+        </Link>
+      </div>
+    </div>
+  </div>
+);
 
 export default PostManagement;
