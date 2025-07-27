@@ -22,11 +22,11 @@ const footerSections = [
     title: 'Services',
     icon: Globe,
     links: [
-      { label: 'Branded Content Creation', href: '/services/branded-content' },
-      { label: 'Celebrity Engagement', href: '/services/celebrity-engagement' },
-      { label: 'Sponsorships', href: '/services/sponsorships' },
-      { label: 'Intellectual Properties', href: '/services/ip' },
-      { label: 'Digital Marketing', href: '/services/digital-marketing' },
+      { label: 'Branded Content Creation', href: '/projects?category=Branded%20Content' },
+      { label: 'Celebrity Engagement', href: '/projects?category=Celebrity%20Engagement' },
+      { label: 'Sponsorships', href: '/projects?category=Sponsorships' },
+      { label: 'Intellectual Properties', href: '/projects?category=Intellectual%20Properties' },
+      { label: 'Digital Marketing', href: '/projects?category=Digital%20Marketing' },
     ],
   },
   {

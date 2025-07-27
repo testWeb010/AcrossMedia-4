@@ -1,5 +1,6 @@
 import React, { useState, useMemo, useEffect, useCallback, useRef } from 'react';
 import { Search, ChevronLeft, ChevronRight, ListFilter, ExternalLink, Play, ArrowUpRight, AlertCircle, Loader, FolderOpen, Sparkles, Rocket, Briefcase, Zap, Plus, Target, TrendingUp } from 'lucide-react';
+import { useNavigate, useSearchParams } from 'react-router-dom';
 import { formatTimeAgo } from '@/lib/utils';
 import { apiRequestJson } from '@/utils/api';
 
@@ -15,10 +16,12 @@ interface Project {
   keywords?: string[];
 }
 
-const categories = ['All', 'Branded Content', 'Celebrity Engagement', 'Sponsorships', 'Intellectual Properties'];
+const categories = ['All', 'Branded Content', 'Celebrity Engagement', 'Sponsorships', 'Intellectual Properties', 'Digital Marketing'];
 const ITEMS_PER_PAGE = 6;
 
 const Projects = () => {
+  const [searchParams] = useSearchParams();
+  const navigate = useNavigate();
   const [projects, setProjects] = useState<Project[]>([]);
   const [displayedProjects, setDisplayedProjects] = useState<Project[]>([]);
   const [loading, setLoading] = useState(true);
@@ -30,6 +33,14 @@ const Projects = () => {
   const [hasMore, setHasMore] = useState(false);
   const observerRef = useRef<IntersectionObserver | null>(null);
   const lastProjectRef = useRef<HTMLDivElement | null>(null);
+
+  // Initialize category from URL parameters
+  useEffect(() => {
+    const categoryParam = searchParams.get('category');
+    if (categoryParam && categories.includes(categoryParam)) {
+      setActiveCategory(categoryParam);
+    }
+  }, [searchParams]);
 
   useEffect(() => {
     fetchProjects();
@@ -229,23 +240,31 @@ const Projects = () => {
                 <div>
                   <h4 className="font-semibold mb-4">Category</h4>
                   <div className="space-y-2">
-                    {categories.map(category => (
-                      <button 
-                        key={category}
-                        onClick={() => setActiveCategory(category)}
-                        className={`w-full text-left px-4 py-2 rounded-lg text-sm transition-colors flex justify-between items-center ${
-                          activeCategory === category 
-                          ? 'bg-cyan-500/20 text-cyan-300' 
-                          : 'hover:bg-gray-700/50 text-gray-300'
-                        }`}>
-                        <span>{category}</span>
-                         <span className='text-xs bg-gray-700 px-2 py-0.5 rounded-full'>
-                           {category === 'All' 
-                             ? projects.length 
-                             : projects.filter(p => p.category === category).length}
-                         </span>
-                      </button>
-                    ))}
+                     {categories.map(category => (
+                       <button 
+                         key={category}
+                         onClick={() => {
+                           setActiveCategory(category);
+                           // Update URL without refreshing the page
+                           if (category === 'All') {
+                             navigate('/projects', { replace: true });
+                           } else {
+                             navigate(`/projects?category=${encodeURIComponent(category)}`, { replace: true });
+                           }
+                         }}
+                         className={`w-full text-left px-4 py-2 rounded-lg text-sm transition-colors flex justify-between items-center ${
+                           activeCategory === category 
+                           ? 'bg-cyan-500/20 text-cyan-300' 
+                           : 'hover:bg-gray-700/50 text-gray-300'
+                         }`}>
+                         <span>{category}</span>
+                          <span className='text-xs bg-gray-700 px-2 py-0.5 rounded-full'>
+                            {category === 'All' 
+                              ? projects.length 
+                              : projects.filter(p => p.category === category).length}
+                          </span>
+                       </button>
+                     ))}
                   </div>
                 </div>
               </div>
@@ -268,12 +287,13 @@ const Projects = () => {
             {!loading && !error && displayedProjects.length > 0 && (
               <>
                 <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-2 gap-8">
-                  {displayedProjects.map((project, index) => (
-                    <div 
-                      key={project._id} 
-                      className="group relative"
-                      ref={index === displayedProjects.length - 1 ? lastProjectRef : null}
-                    >
+                   {displayedProjects.map((project, index) => (
+                     <div 
+                       key={project._id} 
+                       className="group relative cursor-pointer"
+                       ref={index === displayedProjects.length - 1 ? lastProjectRef : null}
+                       onClick={() => navigate(`/post/${project._id}?type=project`)}
+                     >
                       <div className="absolute -inset-0.5 bg-gradient-to-r from-cyan-500 to-pink-600 rounded-3xl blur opacity-0 group-hover:opacity-30 transition duration-1000"></div>
                       <div className="relative bg-gradient-to-br from-gray-900 to-gray-800 rounded-3xl overflow-hidden border border-gray-700 hover:border-gray-600 transition-all duration-500">
                         <div className="relative overflow-hidden">
@@ -284,17 +304,29 @@ const Projects = () => {
                              onError={(e) => { e.currentTarget.src = 'https://images.unsplash.com/photo-1605810230434-7631ac76ec81?w=800&h=600&fit=crop'; }}
                            />
                           <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/20 to-transparent opacity-0 group-hover:opacity-100 transition-all duration-500">
-                            <div className="absolute bottom-4 left-4 right-4 flex justify-between items-end">
-                              <div className="flex gap-3">
-                                <button className="w-12 h-12 bg-white/10 backdrop-blur-sm rounded-full flex items-center justify-center hover:bg-white/20 transition-colors border border-white/20">
-                                  <Play size={20} className="text-white" />
-                                </button>
-                                <button className="w-12 h-12 bg-white/10 backdrop-blur-sm rounded-full flex items-center justify-center hover:bg-white/20 transition-colors border border-white/20">
-                                  <ExternalLink size={20} className="text-white" />
-                                </button>
-                              </div>
-                              <ArrowUpRight className="w-6 h-6 text-white/80" />
-                            </div>
+                           <div className="absolute bottom-4 left-4 right-4 flex justify-between items-end">
+                             <div className="flex gap-3">
+                               <button 
+                                 className="w-12 h-12 bg-white/10 backdrop-blur-sm rounded-full flex items-center justify-center hover:bg-white/20 transition-colors border border-white/20"
+                                 onClick={(e) => {
+                                   e.stopPropagation();
+                                   navigate(`/post/${project._id}?type=project`);
+                                 }}
+                               >
+                                 <Play size={20} className="text-white" />
+                               </button>
+                               <button 
+                                 className="w-12 h-12 bg-white/10 backdrop-blur-sm rounded-full flex items-center justify-center hover:bg-white/20 transition-colors border border-white/20"
+                                 onClick={(e) => {
+                                   e.stopPropagation();
+                                   navigate(`/post/${project._id}?type=project`);
+                                 }}
+                               >
+                                 <ExternalLink size={20} className="text-white" />
+                               </button>
+                             </div>
+                             <ArrowUpRight className="w-6 h-6 text-white/80" />
+                           </div>
                           </div>
                           <div className="absolute top-4 left-4">
                             <div className="bg-gradient-to-r from-cyan-500 to-pink-600 px-3 py-1 rounded-full">
