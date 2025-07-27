@@ -125,61 +125,110 @@ const Projects = () => {
     };
   }, [hasMore, loadingMore, loadMoreProjects]);
 
-  // --- NEW: Beautiful Empty State Component ---
-  const EmptyState = () => (
-    <div className="text-center py-20 overflow-hidden">
-      {/* Moving card animation */}
-      <div className="relative mb-12 h-56 flex items-center">
-        <div className="absolute inset-0 bg-gradient-to-r from-black via-transparent to-black z-10"></div>
-        <div className="flex animate-[scroll_20s_linear_infinite] space-x-8">
-          {[...Array(6)].map((_, index) => (
-            <div
-              key={index}
-              className="flex-shrink-0 w-80 h-48 bg-gradient-to-br from-gray-900 to-gray-800 rounded-3xl border border-gray-700 p-6"
-            >
-              <div className="flex items-center gap-3 mb-4">
-                <div className="w-12 h-12 bg-gradient-to-r from-cyan-600 to-pink-700 rounded-full flex items-center justify-center">
-                  <FolderOpen className="w-6 h-6 text-white/80" />
+  // --- Enhanced Empty State Component for Filtered Categories ---
+  const EmptyState = () => {
+    const isFiltered = activeCategory !== 'All';
+    
+    return (
+      <div className="text-center py-20 overflow-hidden">
+        {/* Moving card animation */}
+        <div className="relative mb-12 h-56 flex items-center">
+          <div className="absolute inset-0 bg-gradient-to-r from-black via-transparent to-black z-10"></div>
+          <div className="flex animate-[scroll_20s_linear_infinite] space-x-8">
+            {[...Array(6)].map((_, index) => (
+              <div
+                key={index}
+                className="flex-shrink-0 w-80 h-48 bg-gradient-to-br from-gray-900 to-gray-800 rounded-3xl border border-gray-700 p-6"
+              >
+                <div className="flex items-center gap-3 mb-4">
+                  <div className="w-12 h-12 bg-gradient-to-r from-pink-500 to-purple-600 rounded-full flex items-center justify-center">
+                    <FolderOpen className="w-6 h-6 text-white/80" />
+                  </div>
+                  <div>
+                    <div className="h-4 bg-gray-700 rounded w-24 mb-2 animate-pulse"></div>
+                    <div className="h-3 bg-gray-600 rounded w-16 animate-pulse" style={{animationDelay: '0.2s'}}></div>
+                  </div>
                 </div>
-                <div>
-                  <div className="h-4 bg-gray-700 rounded w-24 mb-2 animate-pulse"></div>
-                  <div className="h-3 bg-gray-600 rounded w-16 animate-pulse" style={{animationDelay: '0.2s'}}></div>
+                <div className="space-y-2">
+                  <div className="h-3 bg-gray-700 rounded animate-pulse" style={{animationDelay: '0.4s'}}></div>
+                  <div className="h-3 bg-gray-700 rounded w-4/5 animate-pulse" style={{animationDelay: '0.6s'}}></div>
                 </div>
               </div>
-              <div className="space-y-2">
-                <div className="h-3 bg-gray-700 rounded animate-pulse" style={{animationDelay: '0.4s'}}></div>
-                <div className="h-3 bg-gray-700 rounded w-4/5 animate-pulse" style={{animationDelay: '0.6s'}}></div>
+            ))}
+          </div>
+        </div>
+
+        <div className="max-w-2xl mx-auto">
+          {isFiltered ? (
+            <>
+              <div className="inline-flex items-center gap-3 bg-pink-500/10 backdrop-blur-sm border border-pink-500/30 rounded-full px-6 py-3 mb-8">
+                <Target className="w-5 h-5 text-pink-400 animate-pulse" />
+                <span className="text-pink-400 text-sm font-medium tracking-wider uppercase">Category: {activeCategory}</span>
               </div>
-            </div>
-          ))}
+              
+              <h3 className="text-4xl lg:text-5xl font-bold mb-6">
+                <span className="bg-gradient-to-r from-pink-400 via-purple-400 to-cyan-400 bg-clip-text text-transparent">
+                  No Projects Found
+                </span>
+              </h3>
+              
+              <p className="text-lg text-gray-400 leading-relaxed mb-10">
+                We haven't created any projects in the <span className="text-pink-400 font-semibold">{activeCategory}</span> category yet. 
+                Our team is constantly working on innovative solutions across all service areas.
+              </p>
+
+              <div className="flex flex-col sm:flex-row gap-4 justify-center">
+                <button 
+                  onClick={() => {
+                    setActiveCategory('All');
+                    navigate('/projects', { replace: true });
+                  }}
+                  className="group relative overflow-hidden bg-gradient-to-r from-pink-500 to-purple-600 text-white px-8 py-4 rounded-xl font-semibold transition-all duration-300 hover:shadow-2xl hover:shadow-pink-500/25 hover:scale-105"
+                >
+                  <div className="absolute inset-0 bg-gradient-to-r from-pink-400 to-purple-500 opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
+                  <div className="relative flex items-center gap-2">
+                    <span>View All Projects</span>
+                    <ArrowUpRight size={18} className="group-hover:translate-x-1 group-hover:-translate-y-1 transition-transform" />
+                  </div>
+                </button>
+                
+                <button 
+                  onClick={() => navigate('/')}
+                  className="group relative overflow-hidden bg-gray-800/50 backdrop-blur-sm border border-gray-600 text-white px-8 py-4 rounded-xl font-semibold transition-all duration-300 hover:bg-gray-700/50"
+                >
+                  <span>Back to Home</span>
+                </button>
+              </div>
+            </>
+          ) : (
+            <>
+              <div className="inline-flex items-center gap-3 bg-gray-800/50 backdrop-blur-sm border border-gray-700 rounded-full px-6 py-3 mb-8">
+                <Sparkles className="w-5 h-5 text-cyan-400 animate-pulse" />
+                <span className="text-cyan-400 text-sm font-medium tracking-wider uppercase">Portfolio Under Construction</span>
+              </div>
+              
+              <h3 className="text-4xl lg:text-5xl font-bold mb-6">
+                <span className="bg-gradient-to-r from-white to-gray-400 bg-clip-text text-transparent">
+                  Amazing Things Are Coming Soon
+                </span>
+              </h3>
+              
+              <p className="text-lg text-gray-400 leading-relaxed mb-10">
+                We're busy crafting our showcase of extraordinary projects and innovative media solutions. 
+                Our portfolio of groundbreaking campaigns will be available here shortly.
+              </p>
+            </>
+          )}
+
+          <div className="flex justify-center gap-4 mt-8">
+            <div className="w-3 h-3 bg-pink-400 rounded-full animate-bounce" style={{ animationDelay: '0ms' }}></div>
+            <div className="w-3 h-3 bg-purple-400 rounded-full animate-bounce" style={{ animationDelay: '150ms' }}></div>
+            <div className="w-3 h-3 bg-cyan-400 rounded-full animate-bounce" style={{ animationDelay: '300ms' }}></div>
+          </div>
         </div>
       </div>
-
-      <div className="max-w-2xl mx-auto">
-        <div className="inline-flex items-center gap-3 bg-gray-800/50 backdrop-blur-sm border border-gray-700 rounded-full px-6 py-3 mb-8">
-          <Sparkles className="w-5 h-5 text-cyan-400 animate-pulse" />
-          <span className="text-cyan-400 text-sm font-medium tracking-wider uppercase">Portfolio Under Construction</span>
-        </div>
-        
-        <h3 className="text-4xl lg:text-5xl font-bold mb-6">
-          <span className="bg-gradient-to-r from-white to-gray-400 bg-clip-text text-transparent">
-            Amazing Things Are Coming Soon
-          </span>
-        </h3>
-        
-        <p className="text-lg text-gray-400 leading-relaxed mb-10">
-          We're busy crafting our showcase of extraordinary projects and innovative media solutions. 
-          Our portfolio of groundbreaking campaigns will be available here shortly.
-        </p>
-
-        <div className="flex justify-center gap-4">
-          <div className="w-3 h-3 bg-cyan-400 rounded-full animate-bounce" style={{ animationDelay: '0ms' }}></div>
-          <div className="w-3 h-3 bg-pink-400 rounded-full animate-bounce" style={{ animationDelay: '150ms' }}></div>
-          <div className="w-3 h-3 bg-purple-400 rounded-full animate-bounce" style={{ animationDelay: '300ms' }}></div>
-        </div>
-      </div>
-    </div>
-  );
+    );
+  };
   // --- End of Empty State Component ---
 
   if (loading) {
