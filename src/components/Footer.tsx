@@ -153,14 +153,12 @@ const Footer = () => {
                   whileHover={{ scale: 1.05 }}
                   transition={{ type: "spring", stiffness: 300 }}
                 >
-                  {/* Enhanced logo background with pink glow */}
-                  <div className="absolute -inset-4 bg-gradient-to-r from-pink-500/20 via-purple-500/15 to-cyan-500/10 rounded-2xl blur-xl opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
-                  <div className="absolute -inset-2 bg-gradient-to-r from-pink-500/10 to-purple-500/10 rounded-xl opacity-50" />
-                  <div className="relative bg-gradient-to-br from-gray-800/80 to-gray-900/80 backdrop-blur-sm rounded-xl p-3 border border-pink-500/20">
+                  <div className="absolute -inset-4 bg-gradient-to-r from-primary/20 via-purple-500/15 to-cyan-500/10 rounded-2xl blur-xl opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
+                  <div className="relative bg-gradient-to-br from-gray-800/80 to-gray-900/80 backdrop-blur-sm rounded-xl p-3">
                     <img
                       src={logo}
                       alt="AcrossMedia Solutions Logo"
-                      className="h-12 relative z-10 filter brightness-125 contrast-110"
+                      className="h-12"
                     />
                   </div>
                 </motion.div>
