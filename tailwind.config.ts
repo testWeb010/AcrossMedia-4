@@ -94,11 +94,25 @@ export default {
 					to: {
 						height: '0'
 					}
-        }
+				},
+				'marquee-forward': {
+					'0%': { transform: 'translateX(0%)' },
+					'100%': { transform: 'translateX(-50%)' },
+				},
+				'marquee-reverse': {
+					'0%': { transform: 'translateX(-50%)' },
+					'100%': { transform: 'translateX(0%)' },
+				},
 			},
 			animation: {
 				'accordion-down': 'accordion-down 0.2s ease-out',
-				'accordion-up': 'accordion-up 0.2s ease-out'
+				'accordion-up': 'accordion-up 0.2s ease-out',
+				'marquee-forward': 'marquee-forward linear infinite',
+				'marquee-reverse': 'marquee-reverse linear infinite',
+				// NEW: Ping-pong animations for mobile
+				'marquee-ping-pong': 'marquee-forward linear infinite alternate',
+				'marquee-ping-pong-reverse': 'marquee-reverse linear infinite alternate',
+		
 			}
 		}
 	},

@@ -1,3 +1,5 @@
+// src/components/IPShowcase.tsx
+
 import React, { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { ChevronLeft, ChevronRight, Calendar, ArrowUpRight, Image, Lightbulb, Sparkles, FileText, Plus } from 'lucide-react';
@@ -18,6 +20,15 @@ const IPShowcase = () => {
   const [ips, setIps] = useState<IP[]>([]);
   const [loading, setLoading] = useState(true);
   const navigate = useNavigate();
+
+  // === START: NEW CONSTANTS FOR CARD DIMENSIONS ===
+  // Using constants makes it much easier to adjust the carousel's look and feel.
+  const CARD_WIDTH_REM = 14; // w-56 in Tailwind (14 * 16 = 224px)
+  const GAP_REM = 1;         // gap-4 in Tailwind (1 * 16 = 16px)
+  
+  const CARD_WIDTH_PX = CARD_WIDTH_REM * 16;
+  const GAP_PX = GAP_REM * 16;
+  // === END: NEW CONSTANTS FOR CARD DIMENSIONS ===
 
   // Fetch IP projects from API with category filter
   useEffect(() => {
@@ -64,7 +75,7 @@ const IPShowcase = () => {
       const timer = setInterval(nextSlide, 4000);
       return () => clearInterval(timer);
     }
-  }, [ips.length]);
+  }, [ips.length, nextSlide]); // Added nextSlide to dependency array as per ESLint best practice
 
   // Enhanced Empty State Component
   const EmptyState = () => (
@@ -284,16 +295,11 @@ const IPShowcase = () => {
                 <AnimatePresence mode="wait">
                   <motion.div
                     key={currentSlide}
-                    initial={{ opacity: 0, x: 100 }}
-                    animate={{ opacity: 1, x: 0 }}
-                    exit={{ opacity: 0, x: -100 }}
-                    transition={{ 
-                      duration: 0.6, 
-                      ease: [0.25, 0.46, 0.45, 0.94],
-                      type: "spring",
-                      stiffness: 100
-                    }}
-                    className="relative aspect-[16/9] bg-gradient-to-br from-gray-800 to-gray-900 cursor-pointer group"
+                    initial={{ opacity: 0 }}
+                    animate={{ opacity: 1 }}
+                    exit={{ opacity: 0 }}
+                    transition={{ duration: 0.7, ease: "easeInOut" }}
+                    className="relative aspect-video lg:aspect-[2.2/1] bg-gray-900 cursor-pointer group"
                     onClick={() => handleIPClick(ips[currentSlide])}
                   >
                     <img
@@ -372,32 +378,32 @@ const IPShowcase = () => {
               </div>
             </div>
 
-            {/* Horizontal Moving Carousel */}
+            {/* === START: UPDATED HORIZONTAL CAROUSEL === */}
             <div className="relative">
               <div className="overflow-hidden">
                 <motion.div 
-                  className="flex gap-6"
+                  className="flex gap-4" // UPDATED: gap reduced to gap-4
                   animate={{ 
-                    x: ips.length > 0 ? -((currentSlide * 320) % (ips.length * 320)) : 0 
+                    // UPDATED: Animation logic now uses constants for perfect alignment
+                    x: ips.length > 0 ? -(currentSlide * (CARD_WIDTH_PX + GAP_PX)) : 0 
                   }}
                   transition={{ 
                     duration: 0.8, 
                     ease: "easeInOut" 
                   }}
-                  style={{ width: `${ips.length * 320}px` }}
                 >
                   {/* Create infinite loop effect by duplicating items */}
                   {[...ips, ...ips, ...ips].map((ip, index) => (
                     <motion.div
                       key={`${ip._id}-${index}`}
-                      className={`relative aspect-video w-80 rounded-xl overflow-hidden cursor-pointer border-2 transition-all flex-shrink-0 ${
+                      className={`relative aspect-video w-56 rounded-xl overflow-hidden cursor-pointer border-2 transition-all flex-shrink-0 ${ // UPDATED: width reduced to w-56
                         (index % ips.length) === currentSlide 
                           ? 'border-primary shadow-lg shadow-primary/25' 
                           : 'border-gray-700 hover:border-gray-500'
                       }`}
                       onClick={() => {
                         setCurrentSlide(index % ips.length);
-                        handleIPClick(ip);
+                        // handleIPClick(ip); // You might want to remove this to avoid navigating when clicking a thumbnail
                       }}
                       whileHover={{ scale: 1.05, y: -5 }}
                       transition={{ duration: 0.3 }}
@@ -421,12 +427,8 @@ const IPShowcase = () => {
                   ))}
                 </motion.div>
               </div>
-              
-              {/* Scroll indicators */}
-              <div className="absolute right-0 top-1/2 transform -translate-y-1/2 text-gray-400 text-sm">
-                <span>Scroll →</span>
-              </div>
             </div>
+            {/* === END: UPDATED HORIZONTAL CAROUSEL === */}
           </>
         )}
       </div>
