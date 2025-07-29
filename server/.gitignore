@@ -20,5 +20,4 @@ server/assets/*
 todo.txt
 .idea
 .vscode
-dist/
 sitemap
