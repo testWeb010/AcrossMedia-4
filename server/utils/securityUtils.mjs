@@ -193,18 +193,48 @@ export const generateRateLimitKey = (req) => {
 };
 
 // Security event logging
-export const logSecurityEvent = (eventType, details, req) => {
+export const logSecurityEvent = async (eventType, details, req) => {
+  // Get client IP, checking multiple headers in case of proxy
+  const forwardedFor = req.headers['x-forwarded-for']?.split(',').shift().trim();
+  const realIp = req.headers['x-real-ip'];
+  const cfConnectingIp = req.headers['cf-connecting-ip'];
+  const trueClientIp = req.headers['true-client-ip'];
+  
+  // Use the first available IP from the headers, falling back to req.ip with a note about local connection
+  const clientIp = forwardedFor || realIp || cfConnectingIp || trueClientIp || (req.ip ? `${req.ip} (local)` : 'unknown');
+  const requestIp = req.ip || 'unknown';
+  
+  // Log all headers for debugging, excluding sensitive information like cookies
+  const filteredHeaders = { ...req.headers };
+  delete filteredHeaders.cookie;
+  delete filteredHeaders['set-cookie'];
+  
   const event = {
     timestamp: new Date().toISOString(),
     type: eventType,
-    ip: req.ip,
+    ip: {
+      client: clientIp,
+      request: requestIp
+    },
     userAgent: req.headers['user-agent'],
-    details: details
+    details: {
+      ...details,
+      role: details.role || 'unknown'
+    }
   };
   
-  // In production, send to security monitoring system
-  console.log('SECURITY EVENT:', JSON.stringify(event, null, 2));
+  try {
+    // Store in MongoDB
+    const { getDb } = await import('../config/db.mjs');
+    const db = await getDb();
+    const collection = db.collection('securityEvents');
+    const result = await collection.insertOne(event);
+    console.log(eventType, 'Result:', result.acknowledged);
+  } catch (error) {
+    console.error('Error storing SECURITY EVENT in MongoDB:', error.message);
+    // Fallback to console logging on error
+    console.log('SECURITY EVENT:', JSON.stringify(event, null, 2));
+  }
   
   return event;
 };
-
