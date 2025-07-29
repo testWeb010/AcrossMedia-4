@@ -4,7 +4,6 @@ import { apiRequestJson } from '../../utils/api';
 import AuthenticatedWrapper from './AuthenticatedWrapper';
 import { ScrollArea } from '@/components/ui/scroll-area';
 
-
 interface DashboardData {
   totalVideos: number;
   totalProjects: number;
@@ -86,7 +85,9 @@ const Dashboard = ({ isDarkMode, themeClasses }: { isDarkMode: boolean; themeCla
     { type: 'project', title: 'Project updated: "Celebrity Collaboration"', time: '4 hours ago' },
     { type: 'video', title: 'Video published: "Sports Sponsorship"', time: '6 hours ago' },
     { type: 'project', title: 'New project created: "Tech Innovation"', time: '1 day ago' },
-    { type: 'video', title: 'Video analytics updated', time: '2 days ago' }
+    { type: 'video', title: 'Video analytics updated', time: '2 days ago' },
+    { type: 'video', title: 'New video added: "Summer Fest Highlights"', time: '3 days ago' },
+    { type: 'project', title: 'Project "Q3 Report" marked as complete', time: '4 days ago' },
   ];
 
   useEffect(() => {
@@ -197,8 +198,9 @@ const Dashboard = ({ isDarkMode, themeClasses }: { isDarkMode: boolean; themeCla
                 <Activity className="text-cyan-400 w-5 h-5 sm:w-6 sm:h-6" />
                 <h2 className={`text-lg sm:text-xl font-bold ${themeClasses.text}`}>Recent Activity</h2>
               </div>
-              <ScrollArea className="h-64 sm:h-80">
-                <div className="space-y-3 sm:space-y-4 pr-4">
+    
+              <ScrollArea className="h-64 sm:h-80 pr-3">
+                <div className="space-y-3 sm:space-y-4">
                   {recentActivity.length > 0 ? recentActivity.map((activity, index) => (
                     <div key={index} className="flex items-start gap-3 p-3 rounded-xl hover:bg-gray-500/5 transition-colors">
                       <div className={`w-8 h-8 rounded-full flex items-center justify-center flex-shrink-0 ${

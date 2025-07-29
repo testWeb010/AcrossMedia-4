@@ -1,6 +1,5 @@
 import React, { useState } from 'react';
-import { Plus, Video, Image, Settings as SettingsIcon, Moon, Sun, BarChart3, Users, Calendar, Search, FileText, Menu, X } from 'lucide-react';
-import { useIsMobile } from '@/hooks/use-mobile';
+import { Plus, Video, Image, Settings as SettingsIcon, Moon, Sun, BarChart3, Users, Calendar, Search, FileText } from 'lucide-react';
 import PostManagement from './PostManagement';
 import Dashboard from './Dashboard';
 import UserManagement from './UserManagement';
@@ -8,6 +7,7 @@ import Settings from './Settings';
 import LogoutButton from '../auth/LogoutButton';
 import { apiRequestJson } from '../../utils/api';
 
+// This interface remains the same
 interface ThemeClasses {
   bg: string;
   cardBg: string;
@@ -20,9 +20,8 @@ interface ThemeClasses {
 const AdminPanel = () => {
   const [activeTab, setActiveTab] = useState('dashboard');
   const [isDarkMode, setIsDarkMode] = useState(true);
-  const [sidebarOpen, setSidebarOpen] = useState(false);
-  const isMobile = useIsMobile();
 
+  // Tabs data remains the same
   const tabs = [
     { id: 'dashboard', label: 'Dashboard', icon: BarChart3 },
     { id: 'users', label: 'Users', icon: Users },
@@ -34,7 +33,7 @@ const AdminPanel = () => {
     bg: isDarkMode ? 'bg-gray-900' : 'bg-gray-50',
     cardBg: isDarkMode ? 'bg-gray-800' : 'bg-white',
     text: isDarkMode ? 'text-white' : 'text-gray-900',
-    textSecondary: isDarkMode ? 'text-gray-300' : 'text-gray-600',
+    textSecondary: isDarkMode ? 'text-gray-400' : 'text-gray-500',
     border: isDarkMode ? 'border-gray-700' : 'border-gray-200',
     hover: isDarkMode ? 'hover:bg-gray-700' : 'hover:bg-gray-100'
   };
@@ -50,45 +49,41 @@ const AdminPanel = () => {
       case 'settings':
         return <Settings isDarkMode={isDarkMode} themeClasses={themeClasses} />;
       default:
-        return null;
+        // Render Dashboard by default on initial load or invalid tab
+        return <Dashboard isDarkMode={isDarkMode} themeClasses={themeClasses} />;
     }
   };
 
   return (
-    <div className={`min-h-screen ${themeClasses.bg} transition-colors duration-300`}>
+    // Added pb-20 for mobile to prevent content from being hidden by the bottom nav
+    <div className={`min-h-screen ${themeClasses.bg} pb-20 md:pb-0 transition-colors duration-300`}>
       {/* Header */}
-      <header className={`${themeClasses.cardBg} ${themeClasses.border} border-b sticky top-0 z-50 backdrop-blur-sm`}>
-        <div className="px-4 sm:px-6 lg:px-8">
+      <header className={`${themeClasses.cardBg} ${themeClasses.border} border-b sticky top-0 z-40 backdrop-blur-sm bg-opacity-80`}>
+        {/* Responsive padding */}
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex items-center justify-between h-16">
-            <div className="flex items-center gap-4">
-              {isMobile && (
-                <button
-                  onClick={() => setSidebarOpen(!sidebarOpen)}
-                  className={`p-2 rounded-xl ${themeClasses.hover} transition-colors`}
-                >
-                  {sidebarOpen ? <X size={20} /> : <Menu size={20} />}
-                </button>
-              )}
-              <div className="text-xl sm:text-2xl font-bold">
-                <span className={isDarkMode ? 'text-white' : 'text-gray-900'}>Across</span>
+            {/* Responsive gap and text size */}
+            <div className="flex items-center gap-2 md:gap-4">
+              <div className="text-xl md:text-2xl font-bold">
+                <span className={themeClasses.text}>Across</span>
                 <span className="bg-gradient-to-r from-cyan-400 to-pink-500 bg-clip-text text-transparent">Media</span>
               </div>
-              <div className={`hidden sm:block px-3 py-1 rounded-full text-xs font-medium ${
+              <div className={`px-3 py-1 rounded-full text-xs font-medium ${
                 isDarkMode ? 'bg-gray-700 text-gray-300' : 'bg-gray-200 text-gray-600'
               }`}>
-                Admin Panel
+                Admin
               </div>
             </div>
             
-            <div className="flex items-center gap-2 sm:gap-4">
+            <div className="flex items-center gap-2 md:gap-4">
               <button
                 onClick={() => setIsDarkMode(!isDarkMode)}
                 className={`p-2 rounded-xl ${themeClasses.hover} transition-colors ${themeClasses.border} border`}
               >
                 {isDarkMode ? (
-                  <Sun size={18} className="text-yellow-400" />
+                  <Sun size={20} className="text-yellow-400" />
                 ) : (
-                  <Moon size={18} className="text-gray-600" />
+                  <Moon size={20} className="text-gray-600" />
                 )}
               </button>
               
@@ -101,54 +96,63 @@ const AdminPanel = () => {
         </div>
       </header>
 
-      <div className="flex h-[calc(100vh-4rem)] overflow-hidden">
-        {/* Mobile Sidebar Overlay */}
-        {isMobile && sidebarOpen && (
-          <div 
-            className="fixed inset-0 bg-black/50 z-40"
-            onClick={() => setSidebarOpen(false)}
-          />
-        )}
-
-        {/* Sidebar */}
-        <aside className={`
-          ${isMobile ? 'fixed inset-y-16 left-0 z-50 w-64' : 'w-64 flex-shrink-0'}
-          ${isMobile && !sidebarOpen ? '-translate-x-full' : 'translate-x-0'}
-          transition-transform duration-300 ease-in-out
-          ${themeClasses.bg} overflow-y-auto
-        `}>
-          <div className="h-full p-3 sm:p-4">
-            <nav className={`${themeClasses.cardBg} rounded-2xl p-3 sm:p-4 ${themeClasses.border} border h-fit`}>
-              <div className="space-y-1 sm:space-y-2">
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+        {/* Layout shifts from column on mobile to row on desktop */}
+        <div className="flex flex-col md:flex-row md:gap-8">
+          
+          {/* Sidebar - Hidden on mobile, visible from medium screens up */}
+          <aside className="hidden md:block w-64 flex-shrink-0">
+            <nav className={`${themeClasses.cardBg} rounded-2xl p-4 ${themeClasses.border} border sticky top-24`}>
+              <div className="space-y-2">
                 {tabs.map((tab) => (
                   <button
                     key={tab.id}
-                    onClick={() => {
-                      setActiveTab(tab.id);
-                      if (isMobile) setSidebarOpen(false);
-                    }}
-                    className={`w-full flex items-center gap-2 sm:gap-3 px-3 sm:px-4 py-2 sm:py-3 rounded-xl transition-all duration-200 text-sm sm:text-base ${
+                    onClick={() => setActiveTab(tab.id)}
+                    className={`w-full flex items-center gap-3 px-4 py-3 rounded-xl transition-all duration-200 ${
                       activeTab === tab.id
                         ? 'bg-gradient-to-r from-cyan-500 to-pink-600 text-white shadow-lg'
                         : `${themeClasses.textSecondary} ${themeClasses.hover}`
                     }`}
                   >
-                    <tab.icon size={isMobile ? 18 : 20} />
+                    <tab.icon size={20} />
                     <span className="font-medium">{tab.label}</span>
                   </button>
                 ))}
               </div>
             </nav>
-          </div>
-        </aside>
+          </aside>
 
-        {/* Main Content */}
-        <main className="flex-1 overflow-y-auto h-full">
-          <div className="p-3 sm:p-4 lg:p-6 min-h-full">
+          {/* Main Content */}
+          <main className="flex-1 min-w-0">
             {renderContent()}
-          </div>
-        </main>
+          </main>
+        </div>
       </div>
+      
+      {/* Bottom Navigation - Visible only on mobile, hidden from medium screens up */}
+      <nav className={`md:hidden fixed bottom-0 left-0 right-0 ${themeClasses.cardBg} ${themeClasses.border} border-t z-50`}>
+         <div className="flex justify-around items-center h-16">
+            {tabs.map((tab) => (
+              <button
+                key={`mobile-${tab.id}`}
+                onClick={() => setActiveTab(tab.id)}
+                className="flex flex-col items-center justify-center w-full h-full p-2"
+              >
+                <tab.icon 
+                  size={24} 
+                  className={`transition-colors duration-200 ${
+                    activeTab === tab.id ? 'text-cyan-400' : themeClasses.textSecondary
+                  }`} 
+                />
+                <span className={`text-xs mt-1 transition-colors duration-200 ${
+                  activeTab === tab.id ? 'text-cyan-400' : themeClasses.textSecondary
+                }`}>
+                  {tab.label}
+                </span>
+              </button>
+            ))}
+         </div>
+      </nav>
     </div>
   );
 };

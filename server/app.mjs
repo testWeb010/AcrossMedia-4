@@ -82,9 +82,9 @@ connectToDatabase().catch(err => {
 });
 
 // Health check endpoint
-app.get('/api/health', (req, res) => {
-  res.status(200).json({ status: 'OK', message: 'Server is running' });
-});
+// app.get('/api/health', (req, res) => {
+//   res.status(200).json({ status: 'OK', message: 'Server is running' });
+// });
 
 // API Routes
 app.use('/api/auth/admin', adminAuth);

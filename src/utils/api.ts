@@ -12,7 +12,7 @@ export const apiRequestJson = async <T>(
   options: RequestInit = {}
 ): Promise<T> => {
   const token = localStorage.getItem('auth_token');
-  const baseUrl = import.meta.env.VITE_API_BASE_URL || 'http://localhost:3001';
+  const baseUrl = 'http://localhost:3001';
   const fullUrl = url.startsWith('http') ? url : `${baseUrl}${url}`;
   
   const headers = {
