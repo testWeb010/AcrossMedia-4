@@ -12,7 +12,7 @@ export const apiRequestJson = async <T>(
   options: RequestInit = {}
 ): Promise<T> => {
   const token = localStorage.getItem('auth_token');
-  const baseUrl = 'http://localhost:3001';
+  const baseUrl = 'https://acrossmedia.onrender.com';
   const fullUrl = url.startsWith('http') ? url : `${baseUrl}${url}`;
   
   const headers = {
