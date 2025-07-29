@@ -95,13 +95,20 @@ export default {
 						height: '0'
 					}
 				},
-				'marquee-forward': {
+				 // For DESKTOP (seamless infinite loop)
+				 'marquee-forward': {
 					'0%': { transform: 'translateX(0%)' },
-					'100%': { transform: 'translateX(-50%)' },
-				},
-				'marquee-reverse': {
+					'100%': { transform: 'translateX(-50%)' }, // Moves by half the width
+				  },
+				  'marquee-reverse': {
 					'0%': { transform: 'translateX(-50%)' },
 					'100%': { transform: 'translateX(0%)' },
+				  },
+				  // For MOBILE (ping-pong back and forth)
+				  'marquee-ping-pong': {
+					'0%': { transform: 'translateX(0)' },
+					// This calculates the exact distance to scroll to show the last logo at the edge
+					'100%': { transform: 'translateX(calc(-100% + 100vw - 3rem))' }, // 3rem accounts for padding
 				},
 			},
 			animation: {
