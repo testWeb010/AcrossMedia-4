@@ -239,19 +239,20 @@ const PostManagement = ({ isDarkMode, themeClasses }: { isDarkMode: boolean; the
   
   return (
     <AuthenticatedWrapper themeClasses={themeClasses}>
-        <div className="space-y-6">
+      <div className="h-full overflow-y-auto">
+        <div className="space-y-4 sm:space-y-6">
             {/* Header */}
-            <div className={`${themeClasses.cardBg} rounded-2xl p-6 ${themeClasses.border} border`}>
-                <div className="flex items-center justify-between">
+            <div className={`${themeClasses.cardBg} rounded-2xl p-4 sm:p-6 ${themeClasses.border} border`}>
+                <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
                 <div>
-                    <h1 className={`text-2xl font-bold ${themeClasses.text} mb-2`}>Post Management</h1>
-                    <p className={themeClasses.textSecondary}>Manage all your projects and video content</p>
+                    <h1 className={`text-xl sm:text-2xl font-bold ${themeClasses.text} mb-2`}>Post Management</h1>
+                    <p className={`${themeClasses.textSecondary} text-sm sm:text-base`}>Manage all your projects and video content</p>
                 </div>
                 <button
                     onClick={() => setShowTypeSelector(true)}
-                    className="flex items-center gap-2 px-6 py-3 bg-gradient-to-r from-cyan-500 to-pink-600 text-white rounded-xl hover:shadow-lg hover:shadow-cyan-500/25 transition-all"
+                    className="flex items-center gap-2 px-4 sm:px-6 py-2 sm:py-3 bg-gradient-to-r from-cyan-500 to-pink-600 text-white rounded-xl hover:shadow-lg hover:shadow-cyan-500/25 transition-all text-sm sm:text-base"
                 >
-                    <Plus size={20} />
+                    <Plus size={18} className="sm:w-5 sm:h-5" />
                     <span>Add Post</span>
                 </button>
                 </div>
@@ -369,6 +370,7 @@ const PostManagement = ({ isDarkMode, themeClasses }: { isDarkMode: boolean; the
                 </div>
             )}
         </div>
+      </div>
     </AuthenticatedWrapper>
   );
 };

@@ -35,9 +35,19 @@ router.get('/', verifyAdmin, async (req, res) => {
     const totalUsers = await db.collection('admins').countDocuments();
     const pendingUsers = await db.collection('admins').countDocuments({ role: 'pending' });
     
-    // Calculate total views from all videos
+    // Calculate total views from all videos with proper parsing
     const videosWithViews = await db.collection('videos').find({}, { projection: { views: 1 } }).toArray();
-    const totalViews = videosWithViews.reduce((sum, video) => sum + (parseInt(video.views) || 0), 0);
+    const totalViews = videosWithViews.reduce((sum, video) => {
+      const views = video.views;
+      if (typeof views === 'string') {
+        // Handle formatted strings like "1,234,567"
+        const numericViews = parseInt(views.replace(/,/g, '')) || 0;
+        return sum + numericViews;
+      } else if (typeof views === 'number') {
+        return sum + views;
+      }
+      return sum;
+    }, 0);
 
     // Get recent activity (last 10 videos and projects)
     const recentVideos = await db.collection('videos')

@@ -162,17 +162,18 @@ const Settings = ({ isDarkMode, themeClasses }: { isDarkMode: boolean; themeClas
 
   return (
     <AuthenticatedWrapper themeClasses={themeClasses}>
-      <div className="space-y-6">
-      {/* Header */}
-      <div className={`${themeClasses.cardBg} rounded-2xl p-6 ${themeClasses.border} border`}>
-        <div className="flex items-center gap-3">
-          <SettingsIcon className="text-cyan-400" size={24} />
-          <div>
-            <h1 className={`text-2xl font-bold ${themeClasses.text}`}>Settings</h1>
-            <p className={themeClasses.textSecondary}>Manage your profile and application settings</p>
+      <div className="h-full overflow-y-auto">
+        <div className="space-y-4 sm:space-y-6">
+        {/* Header */}
+        <div className={`${themeClasses.cardBg} rounded-2xl p-4 sm:p-6 ${themeClasses.border} border`}>
+          <div className="flex items-center gap-3">
+            <SettingsIcon className="text-cyan-400 w-5 h-5 sm:w-6 sm:h-6" />
+            <div>
+              <h1 className={`text-xl sm:text-2xl font-bold ${themeClasses.text}`}>Settings</h1>
+              <p className={`${themeClasses.textSecondary} text-sm sm:text-base`}>Manage your profile and application settings</p>
+            </div>
           </div>
         </div>
-      </div>
 
       {/* Tabs */}
       <div className={`${themeClasses.cardBg} rounded-2xl ${themeClasses.border} border overflow-hidden`}>
@@ -426,10 +427,11 @@ const Settings = ({ isDarkMode, themeClasses }: { isDarkMode: boolean; themeClas
                   </button>
                 </div>
               </form>
-            </div>
+             </div>
           )}
         </div>
       </div>
+        </div>
       </div>
     </AuthenticatedWrapper>
   );

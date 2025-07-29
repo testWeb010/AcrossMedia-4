@@ -101,7 +101,7 @@ const AdminPanel = () => {
         </div>
       </header>
 
-      <div className="flex h-[calc(100vh-4rem)]">
+      <div className="flex h-[calc(100vh-4rem)] overflow-hidden">
         {/* Mobile Sidebar Overlay */}
         {isMobile && sidebarOpen && (
           <div 
@@ -112,14 +112,14 @@ const AdminPanel = () => {
 
         {/* Sidebar */}
         <aside className={`
-          ${isMobile ? 'fixed inset-y-0 left-0 z-50 w-64' : 'w-64 flex-shrink-0'}
+          ${isMobile ? 'fixed inset-y-16 left-0 z-50 w-64' : 'w-64 flex-shrink-0'}
           ${isMobile && !sidebarOpen ? '-translate-x-full' : 'translate-x-0'}
           transition-transform duration-300 ease-in-out
-          ${themeClasses.bg}
+          ${themeClasses.bg} overflow-y-auto
         `}>
-          <div className="h-full p-4">
-            <nav className={`${themeClasses.cardBg} rounded-2xl p-4 ${themeClasses.border} border h-fit`}>
-              <div className="space-y-2">
+          <div className="h-full p-3 sm:p-4">
+            <nav className={`${themeClasses.cardBg} rounded-2xl p-3 sm:p-4 ${themeClasses.border} border h-fit`}>
+              <div className="space-y-1 sm:space-y-2">
                 {tabs.map((tab) => (
                   <button
                     key={tab.id}
@@ -127,13 +127,13 @@ const AdminPanel = () => {
                       setActiveTab(tab.id);
                       if (isMobile) setSidebarOpen(false);
                     }}
-                    className={`w-full flex items-center gap-3 px-4 py-3 rounded-xl transition-all duration-200 ${
+                    className={`w-full flex items-center gap-2 sm:gap-3 px-3 sm:px-4 py-2 sm:py-3 rounded-xl transition-all duration-200 text-sm sm:text-base ${
                       activeTab === tab.id
                         ? 'bg-gradient-to-r from-cyan-500 to-pink-600 text-white shadow-lg'
                         : `${themeClasses.textSecondary} ${themeClasses.hover}`
                     }`}
                   >
-                    <tab.icon size={20} />
+                    <tab.icon size={isMobile ? 18 : 20} />
                     <span className="font-medium">{tab.label}</span>
                   </button>
                 ))}
@@ -143,8 +143,8 @@ const AdminPanel = () => {
         </aside>
 
         {/* Main Content */}
-        <main className="flex-1 overflow-auto">
-          <div className="p-4 sm:p-6 lg:p-8">
+        <main className="flex-1 overflow-y-auto h-full">
+          <div className="p-3 sm:p-4 lg:p-6 min-h-full">
             {renderContent()}
           </div>
         </main>
