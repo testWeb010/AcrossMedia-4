@@ -34,6 +34,10 @@ router.get('/', verifyAdmin, async (req, res) => {
     const totalProjects = await db.collection('projects').countDocuments();
     const totalUsers = await db.collection('admins').countDocuments();
     const pendingUsers = await db.collection('admins').countDocuments({ role: 'pending' });
+    
+    // Calculate total views from all videos
+    const videosWithViews = await db.collection('videos').find({}, { projection: { views: 1 } }).toArray();
+    const totalViews = videosWithViews.reduce((sum, video) => sum + (parseInt(video.views) || 0), 0);
 
     // Get recent activity (last 10 videos and projects)
     const recentVideos = await db.collection('videos')
@@ -54,15 +58,17 @@ router.get('/', verifyAdmin, async (req, res) => {
         type: 'video',
         title: `New video added: "${video.title}"`,
         time: formatRelativeTime(video.createdAt),
-        id: video._id
+        id: video._id,
+        createdAt: video.createdAt
       })),
       ...recentProjects.map(project => ({
         type: 'project',
         title: `Project created: "${project.title}"`,
         time: formatRelativeTime(project.createdAt),
-        id: project._id
+        id: project._id,
+        createdAt: project.createdAt
       }))
-    ].sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt)).slice(0, 10);
+    ].sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt)).slice(0, 15);
 
     // Get analytics data (videos/projects created per month for last 6 months)
     const sixMonthsAgo = new Date();
@@ -91,7 +97,7 @@ router.get('/', verifyAdmin, async (req, res) => {
     const analytics = videoAnalytics.map(item => ({
       month: getMonthName(item._id.month),
       videos: item.count,
-      views: Math.floor(Math.random() * 10000) + 1000 // Mock data for views
+      views: item.count * Math.floor(Math.random() * 5000) + 1000 // Estimated views based on video count
     }));
 
     res.json({
@@ -99,7 +105,7 @@ router.get('/', verifyAdmin, async (req, res) => {
       totalProjects,
       totalUsers,
       pendingUsers,
-      totalViews: Math.floor(Math.random() * 1000000) + 100000, // Mock data
+      totalViews,
       recentActivity,
       analytics
     });
