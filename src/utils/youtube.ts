@@ -1,3 +1,5 @@
+import { apiRequestJson } from '@/utils/api';
+
 export interface YouTubeVideoData {
   title: string;
   description: string;
@@ -36,16 +38,8 @@ export const fetchYouTubeVideoData = async (url: string): Promise<YouTubeVideoDa
   }
 
   try {
-    // Use backend API to fetch YouTube data
-    const response = await fetch(`http://localhost:3001/api/youtube/video/${videoId}`, {
-      credentials: 'include'
-    });
-    
-    if (!response.ok) {
-      throw new Error('Failed to fetch video data');
-    }
-    
-    const data = await response.json();
+    // Use backend API to fetch YouTube data through our apiRequestJson utility
+    const data = await apiRequestJson<any>(`/api/youtube/video/${videoId}`);
     
     return {
       title: data.title || 'YouTube Video',
