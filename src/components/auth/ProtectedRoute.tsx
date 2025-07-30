@@ -58,7 +58,6 @@ const ProtectedRoute: React.FC<ProtectedRouteProps> = ({ children }) => {
         const sessionTimeoutHours = sessionTimeoutMs / (1000 * 60 * 60);
         
         if (hoursSinceLogin > sessionTimeoutHours) {
-          console.log('Session expired, clearing localStorage data');
           // Add a small delay to ensure this isn't a race condition
           setTimeout(() => {
             // Clear expired auth data

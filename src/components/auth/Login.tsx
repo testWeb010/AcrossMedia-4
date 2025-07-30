@@ -40,8 +40,6 @@ const Login: React.FC = () => {
 
       const data = await response.json();
 
-      console.log('Login response data:', data);
-
       // Store session timeout for expiration check
       if (data.sessionTimeout) {
         localStorage.setItem('session_timeout', data.sessionTimeout.toString());
@@ -66,7 +64,6 @@ const Login: React.FC = () => {
       setTimeout(() => {
         const currentPath = window.location.pathname;
         if (currentPath !== '/acs-admin') {
-          console.log('Navigating to /acs-admin after successful login');
           navigate('/acs-admin');
           // Fallback to window.location.href if navigate doesn't work
           setTimeout(() => {

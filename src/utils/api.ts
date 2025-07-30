@@ -1,6 +1,5 @@
 import Cookies from 'js-cookie';
 
-
 /**
  * Utility function to make API requests with JSON content type and Authorization header
  * @param url The API endpoint URL
@@ -12,7 +11,7 @@ export const apiRequestJson = async <T>(
   options: RequestInit = {}
 ): Promise<T> => {
   const token = localStorage.getItem('auth_token');
-  const baseUrl = 'https://acrossmedia.onrender.com';
+  const baseUrl = 'http://localhost:3001';
   const fullUrl = url.startsWith('http') ? url : `${baseUrl}${url}`;
   
   const headers = {

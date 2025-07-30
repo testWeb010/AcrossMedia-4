@@ -57,8 +57,8 @@ const FooterLink = ({ href, children }: { href: string; children: React.ReactNod
 
 // --- Data ---
 const socialLinks = [
-  { Icon: Facebook, href: 'https://facebook.com', label: 'Facebook' },
-  { Icon: Instagram, href: 'https://instagram.com', label: 'Instagram' },
+  { Icon: Facebook, href: 'https://www.facebook.com/people/Across-Media-Solutions/61575659826246/', label: 'Facebook' },
+  { Icon: Instagram, href: 'https://www.instagram.com/acrossmedia.in/', label: 'Instagram' },
   { Icon: Linkedin, href: 'https://www.linkedin.com/company/across-media-solutions-ams/?originalSubdomain=in', label: 'LinkedIn' },
   { Icon: Youtube, href: 'https://youtube.com/@acrossmediasolutions?si=BZZXwU6l2er38LyH', label: 'YouTube' },
 ];
@@ -73,7 +73,6 @@ const servicesLinks = [
 
 const companyLinks = [
   { label: 'About Us', href: '/about' },
-  { label: 'Our Team', href: '/team' },
   { label: 'Contact', href: '/contact' },
 ];
 
@@ -234,7 +233,7 @@ const Footer = () => {
 
         <motion.div className="pt-8 border-t border-slate-800/70 flex flex-col sm:flex-row justify-between items-center gap-6" variants={sectionVariants}>
           <p className="text-slate-500 text-sm text-center sm:text-left">
-            © {new Date().getFullYear()} Across Media Solutions. All Rights Reserved.
+            &copy; {new Date().getFullYear()} Across Media Solutions. All Rights Reserved.
           </p>
           <motion.button
             onClick={scrollToTop}

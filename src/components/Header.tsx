@@ -27,8 +27,8 @@ const Header = () => {
   ];
 
   const socialIcons = [
-    { icon: Instagram, href: 'https://www.instagram.com/acrossmediasolutions/?igsh=M2JjM2JjM2Jj' },
-    { icon: Facebook, href: 'https://www.facebook.com/acrossmediasolutions/' },
+    { icon: Instagram, href: 'https://www.instagram.com/acrossmedia.in/' },
+    { icon: Facebook, href: 'https://www.facebook.com/people/Across-Media-Solutions/61575659826246/' },
     { icon: Linkedin, href: 'https://www.linkedin.com/company/across-media-solutions-ams/?originalSubdomain=in' },
     { icon: Youtube, href: 'https://youtube.com/@acrossmediasolutions?si=BZZXwU6l2er38LyH' },
   ];
@@ -90,6 +90,8 @@ const Header = () => {
                 <a
                   key={index}
                   href={social.href}
+                  target="_blank"
+                  rel="noopener noreferrer"
                   className="w-9 h-9 bg-white/10 backdrop-blur-sm border border-white/20 rounded-lg flex items-center justify-center text-gray-300 hover:text-white hover:bg-gradient-to-r hover:from-cyan-500 hover:to-pink-500 hover:border-transparent transition-all duration-300 hover:scale-110"
                 >
                   <social.icon size={16} />
@@ -135,6 +137,8 @@ const Header = () => {
                 <a
                   key={index}
                   href={social.href}
+                  target="_blank"
+                  rel="noopener noreferrer"
                   className="w-10 h-10 bg-white/10 backdrop-blur-sm border border-white/20 rounded-lg flex items-center justify-center text-gray-300 hover:text-white hover:bg-gradient-to-r hover:from-cyan-500 hover:to-pink-500 hover:border-transparent transition-all duration-300"
                 >
                   <social.icon size={18} />
@@ -149,4 +153,3 @@ const Header = () => {
 };
 
 export default Header;
-

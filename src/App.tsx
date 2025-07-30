@@ -1,11 +1,10 @@
 import React from 'react';
 import { BrowserRouter as Router, Routes, Route, useLocation } from 'react-router-dom';
 import Index from './pages/Index';
-import About from './components/About';
+import AboutUs from './pages/AboutUs';
 import Contact from './components/Contact';
 import Videos from './pages/Videos';
 import Projects from './pages/Projects';
-import Team from './pages/Team';
 import IPDetail from './pages/IPDetail';
 import PostView from './pages/PostView';
 import AdminPanel from './components/admin/AdminPanel';
@@ -33,8 +32,7 @@ const AppContent = () => {
         <Route path="/" element={<Index />} />
         <Route path="/videos" element={<Videos />} />
         <Route path="/projects" element={<Projects />} />
-        <Route path="/team" element={<Team />} />
-        <Route path="/about" element={<About />} />
+        <Route path="/about" element={<AboutUs />} />
         <Route path="/contact" element={<Contact />} />
         <Route path="/ip/:id" element={<IPDetail />} />
         <Route path="/post/:id" element={<PostView />} />
