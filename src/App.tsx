@@ -4,7 +4,7 @@ import Index from './pages/Index';
 import AboutUs from './pages/AboutUs';
 import Contact from './components/Contact';
 import Gallery from './pages/Gallery';
-import Projects from './pages/Projects';
+// import Projects from './pages/Projects';
 import IPDetail from './pages/IPDetail';
 import PostView from './pages/PostView';
 import AdminPanel from './components/admin/AdminPanel';
@@ -31,7 +31,7 @@ const AppContent = () => {
       <Routes>
         <Route path="/" element={<Index />} />
         <Route path="/gallery" element={<Gallery />} />
-        <Route path="/projects" element={<Projects />} />
+        {/* <Route path="/projects" element={<Projects />} /> */}
         <Route path="/about" element={<AboutUs />} />
         <Route path="/contact" element={<Contact />} />
         <Route path="/ip/:id" element={<IPDetail />} />
