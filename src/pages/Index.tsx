@@ -3,7 +3,6 @@ import Hero from '@/components/Hero';
 import Services from '@/components/Services';
 import About from '@/components/About';
 import Portfolio from '@/components/Portfolio';
-import Gallery from '@/components/Gallery';
 import IPShowcase from '@/components/IPShowcase';
 import BrandsShowcase from '@/components/BrandsShowcase';
 import Contact from '@/components/Contact';
@@ -15,7 +14,6 @@ const Index = () => {
       <Services />
       <About />
       <Portfolio />
-      <Gallery />
       <IPShowcase />
       <BrandsShowcase />
       <Contact />

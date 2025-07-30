@@ -3,7 +3,7 @@ import { BrowserRouter as Router, Routes, Route, useLocation } from 'react-route
 import Index from './pages/Index';
 import AboutUs from './pages/AboutUs';
 import Contact from './components/Contact';
-import Videos from './pages/Videos';
+import Gallery from './pages/Gallery';
 import Projects from './pages/Projects';
 import IPDetail from './pages/IPDetail';
 import PostView from './pages/PostView';
@@ -30,7 +30,7 @@ const AppContent = () => {
       {showHeaderFooter && <Header />}
       <Routes>
         <Route path="/" element={<Index />} />
-        <Route path="/videos" element={<Videos />} />
+        <Route path="/gallery" element={<Gallery />} />
         <Route path="/projects" element={<Projects />} />
         <Route path="/about" element={<AboutUs />} />
         <Route path="/contact" element={<Contact />} />
