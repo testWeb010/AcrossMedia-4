@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { ExternalLink, Play, ArrowUpRight, Sparkles, FolderOpen, Video } from 'lucide-react';
+import { ExternalLink, Play, ArrowUpRight, FolderOpen, Video } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
 import { apiRequestJson } from '@/utils/api';
 import { fetchYouTubeVideoData, extractVideoId } from '@/utils/youtube';
@@ -27,10 +27,10 @@ interface VideoItem {
   type: 'video';
 }
 
-type MediaItem = Project | VideoItem;
+type GalleryItem = Project | VideoItem;
 
-const Portfolio = () => {
-  const [mediaItems, setMediaItems] = useState<MediaItem[]>([]);
+const Gallery = () => {
+  const [items, setItems] = useState<GalleryItem[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
   const navigate = useNavigate();
@@ -45,23 +45,23 @@ const Portfolio = () => {
   ];
 
   useEffect(() => {
-    const fetchMediaItems = async () => {
+    const fetchGalleryItems = async () => {
       try {
         setLoading(true);
         
         // Fetch both projects and videos
         const [projectsResponse, videosResponse] = await Promise.all([
-          apiRequestJson<{ projects: Project[] }>('/api/projects?limit=4&status=published'),
-          apiRequestJson<{ videos: VideoItem[] }>('/api/videos?limit=4&status=active')
+          apiRequestJson<{ projects: Project[] }>('/api/projects?limit=6&status=published'),
+          apiRequestJson<{ videos: VideoItem[] }>('/api/videos?limit=6&status=active')
         ]);
 
-        const projects: MediaItem[] = (projectsResponse.projects || []).map(project => ({
+        const projects: GalleryItem[] = (projectsResponse.projects || []).map(project => ({
           ...project,
           type: 'project' as const
         }));
 
         // Enhance videos with YouTube data
-        const enhancedVideos: MediaItem[] = await Promise.all(
+        const enhancedVideos: GalleryItem[] = await Promise.all(
           (videosResponse.videos || []).map(async (video) => {
             try {
               const youtubeData = await fetchYouTubeVideoData(video.url);
@@ -87,17 +87,17 @@ const Portfolio = () => {
           (a, b) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime()
         );
 
-        setMediaItems(allItems);
+        setItems(allItems);
       } catch (err) {
-        console.error('Failed to fetch media items:', err);
-        setError('Failed to load media content');
-        setMediaItems([]);
+        console.error('Failed to fetch gallery items:', err);
+        setError('Failed to load gallery items');
+        setItems([]);
       } finally {
         setLoading(false);
       }
     };
 
-    fetchMediaItems();
+    fetchGalleryItems();
   }, []);
 
   const LoadingSkeleton = () => (
@@ -115,39 +115,12 @@ const Portfolio = () => {
     </div>
   );
 
-  const EmptyState = () => (
-    <div className="text-center py-20">
-      {/* Moving card animation */}
-      <div className="relative mb-12 overflow-hidden">
-        <div className="flex animate-[slide-in-right_3s_ease-in-out_infinite] space-x-8">
-          {[...Array(3)].map((_, index) => (
-            <div
-              key={`empty-card-${index}`}
-              className="flex-shrink-0 w-80 h-48 bg-gradient-to-br from-gray-900 to-gray-800 rounded-3xl border border-gray-700 p-6 transform hover:scale-105 transition-transform duration-300"
-            >
-              <div className="flex items-center gap-3 mb-4">
-                <div className="w-12 h-12 bg-gradient-to-r from-cyan-500 to-pink-600 rounded-full flex items-center justify-center">
-                  <FolderOpen className="w-6 h-6 text-white" />
-                </div>
-                <div>
-                  <div className="h-4 bg-gray-700 rounded w-24 mb-2"></div>
-                  <div className="h-3 bg-gray-600 rounded w-16"></div>
-                </div>
-              </div>
-              <div className="space-y-2">
-                <div className="h-3 bg-gray-700 rounded"></div>
-                <div className="h-3 bg-gray-700 rounded w-4/5"></div>
-                <div className="h-3 bg-gray-700 rounded w-3/5"></div>
-              </div>
-            </div>
-          ))}
-        </div>
-      </div>
-    </div>
-  );
+  const getVideoId = (url: string): string => {
+    return extractVideoId(url) || '';
+  };
 
   return (
-    <section id="work" className="py-32 bg-black relative overflow-hidden">
+    <section id="gallery" className="py-32 bg-black relative overflow-hidden">
       {/* Background elements */}
       <div className="absolute inset-0">
         <div className="absolute top-0 left-1/3 w-96 h-96 bg-purple-500/5 rounded-full blur-3xl"></div>
@@ -158,29 +131,37 @@ const Portfolio = () => {
         <div className="text-center mb-20">
           <div className="inline-flex items-center gap-2 bg-gray-800/50 backdrop-blur-sm border border-gray-700 rounded-full px-6 py-3 mb-8">
             <div className="w-2 h-2 bg-cyan-400 rounded-full animate-pulse"></div>
-            <span className="text-cyan-400 text-sm font-medium tracking-wider uppercase">Our Work</span>
+            <span className="text-cyan-400 text-sm font-medium tracking-wider uppercase">Gallery</span>
           </div>
           
           <h2 className="text-5xl lg:text-6xl font-bold mb-6">
             <span className="bg-gradient-to-r from-white to-gray-300 bg-clip-text text-transparent">
-              Media Highlights
+              Creative Gallery
             </span>
           </h2>
           
           <p className="text-xl text-gray-400 max-w-3xl mx-auto leading-relaxed">
-            Discover our latest projects and videos showcasing innovative campaigns, 
-            brand partnerships, and creative excellence across digital and traditional media.
+            Explore our diverse collection of projects and videos showcasing innovative media solutions,
+            strategic partnerships, and creative excellence across all platforms.
           </p>
         </div>
 
         {loading ? (
           <LoadingSkeleton />
-        ) : mediaItems.length === 0 ? (
-          <EmptyState />
+        ) : items.length === 0 ? (
+          <div className="text-center py-20">
+            <div className="w-24 h-24 mx-auto mb-6 bg-gray-800 rounded-full flex items-center justify-center">
+              <FolderOpen className="w-12 h-12 text-gray-400" />
+            </div>
+            <h3 className="text-xl font-semibold text-gray-300 mb-2">Gallery Coming Soon</h3>
+            <p className="text-gray-400">
+              We're curating amazing content for you. Check back soon!
+            </p>
+          </div>
         ) : (
           <>
             <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
-              {mediaItems.map((item, index) => (
+              {items.map((item, index) => (
                 <div 
                   key={item._id} 
                   className="group relative cursor-pointer"
@@ -206,7 +187,7 @@ const Portfolio = () => {
                       ) : (
                         <>
                           <img 
-                            src={item.thumbnailUrl || `https://i.ytimg.com/vi/${extractVideoId(item.url)}/hqdefault.jpg`}
+                            src={item.thumbnailUrl || `https://i.ytimg.com/vi/${getVideoId(item.url)}/hqdefault.jpg`}
                             alt={item.title}
                             className="w-full h-64 object-cover group-hover:scale-110 transition-transform duration-700"
                             onError={(e) => {
@@ -220,6 +201,14 @@ const Portfolio = () => {
                         </>
                       )}
                       
+                      {/* Category badge */}
+                      <div className="absolute top-4 left-4">
+                        <div className={`bg-gradient-to-r ${gradients[index % gradients.length]} px-3 py-1 rounded-full flex items-center gap-1`}>
+                          {item.type === 'video' && <Video className="w-3 h-3 text-white" />}
+                          <span className="text-white text-xs font-semibold">{item.category}</span>
+                        </div>
+                      </div>
+
                       {/* Overlay */}
                       <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/20 to-transparent opacity-0 group-hover:opacity-100 transition-all duration-500">
                         <div className="absolute bottom-4 left-4 right-4 flex justify-between items-end">
@@ -246,14 +235,6 @@ const Portfolio = () => {
                           <ArrowUpRight className="w-6 h-6 text-white/80" />
                         </div>
                       </div>
-                      
-                      {/* Category badge */}
-                      <div className="absolute top-4 left-4">
-                        <div className={`bg-gradient-to-r ${gradients[index % gradients.length]} px-3 py-1 rounded-full flex items-center gap-1`}>
-                          {item.type === 'video' && <Video className="w-3 h-3 text-white" />}
-                          <span className="text-white text-xs font-semibold">{item.category}</span>
-                        </div>
-                      </div>
                     </div>
                     
                     <div className="p-8">
@@ -270,13 +251,13 @@ const Portfolio = () => {
             </div>
 
             <div className="text-center mt-16">
-                <button 
-                  onClick={() => navigate('/projects')}
-                  className="group relative overflow-hidden bg-gradient-to-r from-cyan-500 to-pink-600 text-white px-10 py-4 rounded-2xl font-semibold transition-all duration-300 hover:shadow-2xl hover:shadow-cyan-500/25 hover:scale-105"
-                >
+              <button 
+                onClick={() => navigate('/projects')}
+                className="group relative overflow-hidden bg-gradient-to-r from-cyan-500 to-pink-600 text-white px-10 py-4 rounded-2xl font-semibold transition-all duration-300 hover:shadow-2xl hover:shadow-cyan-500/25 hover:scale-105"
+              >
                 <div className="absolute inset-0 bg-gradient-to-r from-cyan-400 to-pink-500 opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
                 <div className="relative flex items-center gap-3">
-                  <span>View All Media</span>
+                  <span>Explore Full Gallery</span>
                   <ArrowUpRight size={20} className="group-hover:translate-x-1 group-hover:-translate-y-1 transition-transform" />
                 </div>
               </button>
@@ -288,4 +269,4 @@ const Portfolio = () => {
   );
 };
 
-export default Portfolio;
+export default Gallery;
