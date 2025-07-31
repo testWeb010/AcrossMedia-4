@@ -95,6 +95,7 @@ app.use('/api/projects', projects);
 app.use('/api/admin/dashboard', dashboard);
 app.use('/api/settings', settings);
 app.use('/api/youtube', youtube);
+app.use('/api/contact', (await import('./routes/contact.mjs')).default);
 
 // Serve static files from the React app in production
 // if (process.env.NODE_ENV === 'production') {
