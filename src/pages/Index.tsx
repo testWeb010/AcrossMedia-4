@@ -6,11 +6,13 @@ import Portfolio from '@/components/Portfolio';
 import IPShowcase from '@/components/IPShowcase';
 import BrandsShowcase from '@/components/BrandsShowcase';
 import Contact from '@/components/Contact';
+import InfluencerShowcase from '@/components/InfluencerShowcase';
 
 const Index = () => {
   return (
     <div className="min-h-screen bg-black text-white">
       <Hero />
+      <InfluencerShowcase />
       <Services />
       <About />
       <Portfolio />
