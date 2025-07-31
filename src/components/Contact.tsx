@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Mail, Phone, MapPin, Send, MessageCircle } from 'lucide-react';
+import { Mail, Phone, MapPin, Send, MessageCircle, AlertCircle } from 'lucide-react';
 import { toast } from 'sonner';
 
 const Contact = () => {
@@ -9,7 +9,60 @@ const Contact = () => {
     subject: '',
     message: ''
   });
+  const [errors, setErrors] = useState({
+    name: '',
+    email: '',
+    subject: '',
+    message: '',
+    general: ''
+  });
   const [isSubmitting, setIsSubmitting] = useState(false);
+
+  // Client-side validation
+  const validateField = (name: string, value: string) => {
+    switch (name) {
+      case 'name':
+        if (!value.trim()) return 'Name is required';
+        if (value.trim().length < 2) return 'Name must be at least 2 characters';
+        if (value.trim().length > 100) return 'Name must be less than 100 characters';
+        if (!/^[a-zA-Z\s]+$/.test(value)) return 'Name can only contain letters and spaces';
+        return '';
+      
+      case 'email':
+        if (!value.trim()) return 'Email is required';
+        const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+        if (!emailRegex.test(value)) return 'Please enter a valid email address';
+        return '';
+      
+      case 'subject':
+        if (!value.trim()) return 'Subject is required';
+        if (value.trim().length < 5) return 'Subject must be at least 5 characters';
+        if (value.trim().length > 200) return 'Subject must be less than 200 characters';
+        return '';
+      
+      case 'message':
+        if (!value.trim()) return 'Message is required';
+        if (value.trim().length < 10) return 'Message must be at least 10 characters';
+        if (value.trim().length > 1000) return 'Message must be less than 1000 characters';
+        return '';
+      
+      default:
+        return '';
+    }
+  };
+
+  const validateForm = () => {
+    const newErrors = {
+      name: validateField('name', formData.name),
+      email: validateField('email', formData.email),
+      subject: validateField('subject', formData.subject),
+      message: validateField('message', formData.message),
+      general: ''
+    };
+    
+    setErrors(newErrors);
+    return Object.values(newErrors).every(error => error === '');
+  };
 
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
     const { name, value } = e.target;
@@ -17,11 +70,35 @@ const Contact = () => {
       ...prev,
       [name]: value
     }));
+
+    // Clear error when user starts typing
+    if (errors[name as keyof typeof errors]) {
+      setErrors(prev => ({
+        ...prev,
+        [name]: '',
+        general: ''
+      }));
+    }
   };
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setIsSubmitting(true);
+
+    // Clear previous errors
+    setErrors({
+      name: '',
+      email: '',
+      subject: '',
+      message: '',
+      general: ''
+    });
+
+    // Validate form
+    if (!validateForm()) {
+      setIsSubmitting(false);
+      return;
+    }
 
     try {
       const response = await fetch(`${import.meta.env.VITE_API_BASE_URL}/api/contact/submit`, {
@@ -42,12 +119,44 @@ const Contact = () => {
           subject: '',
           message: ''
         });
+        setErrors({
+          name: '',
+          email: '',
+          subject: '',
+          message: '',
+          general: ''
+        });
       } else {
-        toast.error(data.error || 'Failed to send message. Please try again.');
+        // Handle validation errors from server
+        if (data.details && Array.isArray(data.details)) {
+          const serverErrors = {
+            name: '',
+            email: '',
+            subject: '',
+            message: '',
+            general: ''
+          };
+          
+          data.details.forEach((error: any) => {
+            if (error.path && serverErrors.hasOwnProperty(error.path)) {
+              serverErrors[error.path as keyof typeof serverErrors] = error.msg;
+            }
+          });
+          
+          setErrors(serverErrors);
+        } else {
+          setErrors(prev => ({
+            ...prev,
+            general: data.error || 'Failed to send message. Please try again.'
+          }));
+        }
       }
     } catch (error) {
       console.error('Contact form error:', error);
-      toast.error('Failed to send message. Please check your connection and try again.');
+      setErrors(prev => ({
+        ...prev,
+        general: 'Failed to send message. Please check your connection and try again.'
+      }));
     } finally {
       setIsSubmitting(false);
     }
@@ -134,6 +243,13 @@ const Contact = () => {
             
             <div className="relative bg-gradient-to-br from-gray-800 to-gray-900 rounded-3xl p-10 border border-gray-700">
               <form onSubmit={handleSubmit} className="space-y-8">
+                {errors.general && (
+                  <div className="p-4 bg-red-500/10 border border-red-500/20 rounded-xl flex items-center gap-3">
+                    <AlertCircle size={20} className="text-red-400 flex-shrink-0" />
+                    <span className="text-red-400 text-sm">{errors.general}</span>
+                  </div>
+                )}
+
                 <div className="grid md:grid-cols-2 gap-6">
                   <div>
                     <label className="block text-sm font-semibold text-white mb-3">Name</label>
@@ -142,10 +258,23 @@ const Contact = () => {
                       name="name"
                       value={formData.name}
                       onChange={handleInputChange}
-                      required
-                      className="w-full px-6 py-4 bg-gray-700/50 border border-gray-600 rounded-xl focus:ring-2 focus:ring-cyan-500 focus:border-transparent transition-all text-white placeholder-gray-400"
+                      onBlur={() => {
+                        const error = validateField('name', formData.name);
+                        setErrors(prev => ({ ...prev, name: error }));
+                      }}
+                      className={`w-full px-6 py-4 bg-gray-700/50 border rounded-xl focus:ring-2 focus:border-transparent transition-all text-white placeholder-gray-400 ${
+                        errors.name 
+                          ? 'border-red-500 focus:ring-red-500' 
+                          : 'border-gray-600 focus:ring-cyan-500'
+                      }`}
                       placeholder="Your name"
                     />
+                    {errors.name && (
+                      <div className="mt-2 flex items-center gap-2">
+                        <AlertCircle size={16} className="text-red-400 flex-shrink-0" />
+                        <span className="text-red-400 text-sm">{errors.name}</span>
+                      </div>
+                    )}
                   </div>
                   <div>
                     <label className="block text-sm font-semibold text-white mb-3">Email</label>
@@ -154,10 +283,23 @@ const Contact = () => {
                       name="email"
                       value={formData.email}
                       onChange={handleInputChange}
-                      required
-                      className="w-full px-6 py-4 bg-gray-700/50 border border-gray-600 rounded-xl focus:ring-2 focus:ring-cyan-500 focus:border-transparent transition-all text-white placeholder-gray-400"
+                      onBlur={() => {
+                        const error = validateField('email', formData.email);
+                        setErrors(prev => ({ ...prev, email: error }));
+                      }}
+                      className={`w-full px-6 py-4 bg-gray-700/50 border rounded-xl focus:ring-2 focus:border-transparent transition-all text-white placeholder-gray-400 ${
+                        errors.email 
+                          ? 'border-red-500 focus:ring-red-500' 
+                          : 'border-gray-600 focus:ring-cyan-500'
+                      }`}
                       placeholder="your@email.com"
                     />
+                    {errors.email && (
+                      <div className="mt-2 flex items-center gap-2">
+                        <AlertCircle size={16} className="text-red-400 flex-shrink-0" />
+                        <span className="text-red-400 text-sm">{errors.email}</span>
+                      </div>
+                    )}
                   </div>
                 </div>
 
@@ -168,10 +310,23 @@ const Contact = () => {
                     name="subject"
                     value={formData.subject}
                     onChange={handleInputChange}
-                    required
-                    className="w-full px-6 py-4 bg-gray-700/50 border border-gray-600 rounded-xl focus:ring-2 focus:ring-cyan-500 focus:border-transparent transition-all text-white placeholder-gray-400"
+                    onBlur={() => {
+                      const error = validateField('subject', formData.subject);
+                      setErrors(prev => ({ ...prev, subject: error }));
+                    }}
+                    className={`w-full px-6 py-4 bg-gray-700/50 border rounded-xl focus:ring-2 focus:border-transparent transition-all text-white placeholder-gray-400 ${
+                      errors.subject 
+                        ? 'border-red-500 focus:ring-red-500' 
+                        : 'border-gray-600 focus:ring-cyan-500'
+                    }`}
                     placeholder="Project inquiry"
                   />
+                  {errors.subject && (
+                    <div className="mt-2 flex items-center gap-2">
+                      <AlertCircle size={16} className="text-red-400 flex-shrink-0" />
+                      <span className="text-red-400 text-sm">{errors.subject}</span>
+                    </div>
+                  )}
                 </div>
 
                 <div>
@@ -181,15 +336,28 @@ const Contact = () => {
                     name="message"
                     value={formData.message}
                     onChange={handleInputChange}
-                    required
-                    className="w-full px-6 py-4 bg-gray-700/50 border border-gray-600 rounded-xl focus:ring-2 focus:ring-cyan-500 focus:border-transparent transition-all resize-none text-white placeholder-gray-400"
+                    onBlur={() => {
+                      const error = validateField('message', formData.message);
+                      setErrors(prev => ({ ...prev, message: error }));
+                    }}
+                    className={`w-full px-6 py-4 bg-gray-700/50 border rounded-xl focus:ring-2 focus:border-transparent transition-all resize-none text-white placeholder-gray-400 ${
+                      errors.message 
+                        ? 'border-red-500 focus:ring-red-500' 
+                        : 'border-gray-600 focus:ring-cyan-500'
+                    }`}
                     placeholder="Tell us about your vision and how we can help bring it to life..."
                   ></textarea>
+                  {errors.message && (
+                    <div className="mt-2 flex items-center gap-2">
+                      <AlertCircle size={16} className="text-red-400 flex-shrink-0" />
+                      <span className="text-red-400 text-sm">{errors.message}</span>
+                    </div>
+                  )}
                 </div>
 
                 <button 
                   type="submit"
-                  disabled={isSubmitting}
+                  disabled={isSubmitting || Object.values(errors).some(error => error !== '')}
                   className="group relative overflow-hidden w-full bg-gradient-to-r from-cyan-500 to-pink-600 text-white px-8 py-5 rounded-xl font-semibold transition-all duration-300 hover:shadow-2xl hover:shadow-cyan-500/25 hover:scale-105 disabled:opacity-50 disabled:cursor-not-allowed disabled:hover:scale-100"
                 >
                   <div className="absolute inset-0 bg-gradient-to-r from-cyan-400 to-pink-500 opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
