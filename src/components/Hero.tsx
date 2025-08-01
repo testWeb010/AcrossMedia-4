@@ -2,6 +2,7 @@ import React, { useState, useRef, useEffect } from 'react';
 import { Play, ArrowRight, Sparkles } from 'lucide-react';
 import YouTube from 'react-youtube';
 import { motion, useScroll, useTransform, Variants } from 'framer-motion';
+import { useToast } from '@/hooks/use-toast';
 
 // --- A simple hook to detect screen size for conditional animations ---
 const useMediaQuery = (query: string) => {
@@ -42,7 +43,9 @@ const itemVariants: Variants = {
 
 const Hero = () => {
   const [isPlaying, setIsPlaying] = useState(false);
+  const [videoError, setVideoError] = useState(false);
   const targetRef = useRef<HTMLElement>(null);
+  const { toast } = useToast();
   
   const isDesktop = useMediaQuery('(min-width: 1024px)');
 
@@ -65,7 +68,50 @@ const Hero = () => {
   const opts = {
     height: '100%',
     width: '100%',
-    playerVars: { autoplay: 1, controls: 1, modestbranding: 1, rel: 0 },
+    playerVars: { 
+      autoplay: 0, 
+      controls: 1, 
+      modestbranding: 1, 
+      rel: 0,
+      origin: window.location.origin
+    },
+  };
+
+  const handleVideoReady = () => {
+    toast({
+      title: "Video Ready",
+      description: "Video is ready to play!",
+      variant: "default",
+    });
+  };
+
+  const handleVideoError = (event: any) => {
+    console.error('YouTube video error:', event);
+    setVideoError(true);
+    toast({
+      title: "Video Error",
+      description: "Failed to load video. Please try again later.",
+      variant: "destructive",
+    });
+  };
+
+  const handlePlayVideo = () => {
+    try {
+      setIsPlaying(true);
+      setVideoError(false);
+      toast({
+        title: "Playing Video",
+        description: "Loading video content...",
+        variant: "default",
+      });
+    } catch (error) {
+      console.error('Error playing video:', error);
+      toast({
+        title: "Playback Error",
+        description: "Unable to play video. Please check your connection.",
+        variant: "destructive",
+      });
+    }
   };
 
   return (
@@ -129,7 +175,7 @@ const Hero = () => {
 
             <motion.div variants={itemVariants} className="flex flex-col sm:flex-row gap-4 justify-center lg:justify-start">
               <button
-                onClick={() => setIsPlaying(true)}
+                onClick={handlePlayVideo}
                 className="group relative inline-flex items-center justify-center px-6 py-3.5 sm:px-8 sm:py-4 font-semibold text-white bg-gradient-to-r from-cyan-500 to-pink-600 rounded-2xl overflow-hidden transition-all duration-300 hover:scale-105 hover:shadow-2xl hover:shadow-cyan-500/25"
               >
                 <div className="absolute inset-0 bg-black opacity-0 group-hover:opacity-20 transition-opacity duration-300"></div>
@@ -152,18 +198,36 @@ const Hero = () => {
             className="relative w-full max-w-lg mx-auto"
           >
             <div className="relative bg-gradient-to-br from-gray-800/50 to-gray-900/50 rounded-3xl overflow-hidden border border-gray-700 aspect-video p-2 backdrop-blur-sm">
-              {isPlaying ? (
-                <YouTube videoId={videoId} opts={opts} className="absolute inset-0 w-full h-full rounded-2xl overflow-hidden" />
+              {isPlaying && !videoError ? (
+                <YouTube 
+                  videoId={videoId} 
+                  opts={opts} 
+                  className="absolute inset-2 w-[calc(100%-1rem)] h-[calc(100%-1rem)] rounded-2xl overflow-hidden"
+                  onReady={handleVideoReady}
+                  onError={handleVideoError}
+                />
               ) : (
-                <div onClick={() => setIsPlaying(true)} className="cursor-pointer group">
-                  <img src={`https://i.ytimg.com/vi/${videoId}/maxresdefault.jpg`} alt="Hero Video Thumbnail" className="absolute inset-0 w-full h-full object-cover rounded-2xl" />
-                  <div className="absolute inset-0 bg-black/40 rounded-2xl"></div>
+                <div onClick={handlePlayVideo} className="cursor-pointer group">
+                  <img 
+                    src={`https://i.ytimg.com/vi/${videoId}/maxresdefault.jpg`} 
+                    alt="Hero Video Thumbnail" 
+                    className="absolute inset-2 w-[calc(100%-1rem)] h-[calc(100%-1rem)] object-cover rounded-2xl"
+                    onError={(e) => {
+                      e.currentTarget.src = `https://i.ytimg.com/vi/${videoId}/hqdefault.jpg`;
+                    }}
+                  />
+                  <div className="absolute inset-2 bg-black/40 rounded-2xl"></div>
                   <div className="absolute inset-0 flex items-center justify-center">
                     <div className="w-16 h-16 sm:w-20 sm:h-20 bg-white/10 backdrop-blur-md border border-white/20 rounded-full flex items-center justify-center cursor-pointer transition-all duration-300 group-hover:scale-110 group-hover:bg-white/20">
                       <div className="w-16 h-16 sm:w-20 sm:h-20 rounded-full animate-ping absolute bg-white/20 opacity-75"></div>
                       <Play fill="white" className="text-white h-8 w-8 sm:h-9 sm:w-9" />
                     </div>
                   </div>
+                  {videoError && (
+                    <div className="absolute bottom-4 left-4 right-4 text-center">
+                      <p className="text-red-400 text-sm">Video failed to load. Click to retry.</p>
+                    </div>
+                  )}
                 </div>
               )}
             </div>

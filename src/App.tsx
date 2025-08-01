@@ -16,6 +16,7 @@ import ProtectedRoute from './components/auth/ProtectedRoute';
 import NotFound from './pages/NotFound';
 import Header from './components/Header';
 import Footer from './components/Footer';
+import { Toaster } from '@/components/ui/toaster';
 
 const AppContent = () => {
   const location = useLocation();
@@ -48,6 +49,7 @@ const AppContent = () => {
         <Route path="*" element={<NotFound />} />
       </Routes>
       {showHeaderFooter && <Footer />}
+      <Toaster />
     </div>
   );
 };
