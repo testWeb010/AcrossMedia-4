@@ -1,4 +1,4 @@
-import React, { useEffect, useRef, useState } from "react"; // <-- Import useState
+import React, { useEffect, useRef, useState } from "react";
 import {
   motion,
   Variants,
@@ -11,11 +11,11 @@ import influencerCollage from "../assets/images/influencer-collage.png";
 
 const InfluencerShowcase = () => {
   // --- Refs for measuring DOM elements ---
-  const containerRef = useRef<HTMLDivElement>(null); // Ref for the masking container
-  const imageRef = useRef<HTMLImageElement>(null);   // Ref for the image itself
+  const containerRef = useRef<HTMLDivElement>(null);
+  const imageRef = useRef<HTMLImageElement>(null);
 
   // --- State for dynamic animation values ---
-  const [yRange, setYRange] = useState([0, 0]); // Will store [start, end] pixel values for the animation
+  const [yRange, setYRange] = useState([0, 0]);
 
   // --- Hooks for controlling the animation ---
   const isInView = useInView(containerRef, { once: false, amount: 0.2 });
@@ -27,33 +27,25 @@ const InfluencerShowcase = () => {
       if (containerRef.current && imageRef.current) {
         const containerHeight = containerRef.current.offsetHeight;
         const imageHeight = imageRef.current.offsetHeight;
-
-        // If the image is smaller than the container, no scroll is needed.
-        if (imageHeight <= containerHeight) {
+        if (imageHeight > containerHeight) {
+          const maxScrollDistance = imageHeight - containerHeight;
+          setYRange([0, -maxScrollDistance]);
+        } else {
           setYRange([0, 0]);
-          return;
         }
-
-        // The maximum distance to scroll up without showing empty space
-        const maxScrollDistance = imageHeight - containerHeight;
-        setYRange([0, -maxScrollDistance]);
       }
     };
     
-    // Calculate on initial load and on window resize
     calculateYRange();
     window.addEventListener("resize", calculateYRange);
-
-    // Cleanup the event listener
     return () => window.removeEventListener("resize", calculateYRange);
-  }, []); // Run only once on mount
+  }, []);
 
   // --- Effect to start/stop the animation based on visibility ---
   useEffect(() => {
-    // Only animate if there is a scroll range to animate
     if (isInView && yRange[1] < 0) {
       animationControls.start({
-        y: yRange, // Use the dynamically calculated pixel range
+        y: yRange,
         transition: {
           y: {
             duration: 40,
@@ -69,29 +61,78 @@ const InfluencerShowcase = () => {
   }, [isInView, yRange, animationControls]);
 
 
-  // Variants for the text content (no changes)
+  // Variants for the text content
   const containerVariants: Variants = {
-    // ... (no changes here)
+    hidden: { opacity: 0 },
+    visible: {
+      opacity: 1,
+      transition: {
+        staggerChildren: 0.2,
+        delayChildren: 0.1,
+      },
+    },
   };
+
   const itemVariants: Variants = {
-    // ... (no changes here)
+    hidden: { y: 20, opacity: 0 },
+    visible: {
+      y: 0,
+      opacity: 1,
+      transition: {
+        duration: 0.6,
+        ease: "easeInOut",
+      },
+    },
   };
 
   return (
     <section className="relative w-full bg-black text-white py-20 sm:py-28 overflow-hidden">
-      {/* ... (no changes to background or main layout) ... */}
+      <div className="absolute top-0 left-0 w-full h-full bg-gradient-to-b from-gray-900 via-black to-black opacity-80"></div>
       <div className="relative max-w-7xl mx-auto px-6 lg:px-8">
         <div className="grid lg:grid-cols-2 gap-12 lg:gap-20 items-center">
-          {/* --- Left Column: Text Content (No changes) --- */}
+          
+          {/* --- Left Column: Text Content (RESTORED) --- */}
           <motion.div
-            /* ... (no changes here) ... */
+            className="text-center lg:text-left"
+            variants={containerVariants}
+            initial="hidden"
+            whileInView="visible"
+            viewport={{ once: true, amount: 0.5 }}
           >
-            {/* ... (no changes here) ... */}
+            <motion.h2
+              className="text-indigo-400 font-semibold tracking-wider uppercase"
+              variants={itemVariants}
+            >
+              Our Network
+            </motion.h2>
+            <motion.h1
+              className="mt-4 text-4xl sm:text-5xl lg:text-6xl font-bold tracking-tight bg-gradient-to-r from-white to-gray-300 bg-clip-text text-transparent"
+              variants={itemVariants}
+            >
+              Connecting Brands with India's Top Influencers
+            </motion.h1>
+            <motion.p
+              className="mt-6 text-lg text-gray-300 max-w-xl mx-auto lg:mx-0"
+              variants={itemVariants}
+            >
+              We bridge the gap between your brand and the nation's most
+              followed celebrities, creators, and thought leaders to create
+              authentic and impactful campaigns.
+            </motion.p>
+            <motion.div variants={itemVariants} className="mt-10">
+              <a
+                href="/contact"
+                className="group inline-flex items-center justify-center gap-3 bg-gradient-to-r from-indigo-500 to-purple-600 text-white font-semibold px-8 py-4 rounded-xl shadow-lg shadow-indigo-500/20 transition-all duration-300 hover:scale-105 hover:shadow-xl hover:shadow-indigo-500/40"
+              >
+                Start a Campaign
+                <ArrowRight className="w-5 h-5 transition-transform duration-300 group-hover:translate-x-1" />
+              </a>
+            </motion.div>
           </motion.div>
 
           {/* --- Right Column: Animated Image Collage (FIXED) --- */}
           <div
-            ref={containerRef} // Attach the container ref here
+            ref={containerRef}
             className="relative h-[65vh] max-h-[650px] w-full max-w-sm mx-auto lg:max-w-none"
           >
             <div className="absolute inset-0 rounded-3xl overflow-hidden [mask-image:linear-gradient(to_bottom,white,white,transparent)]">
@@ -100,20 +141,19 @@ const InfluencerShowcase = () => {
                 animate={animationControls}
               >
                 <img
-                  ref={imageRef} // Attach the image ref here
+                  ref={imageRef}
                   src={influencerCollage}
                   alt="Collage of top influencers and celebrities we work with"
                   className="w-full h-auto"
-                  loading="eager" // Load this image eagerly since it's above the fold
-                  // Re-calculate when the image has finished loading to get its correct height
+                  loading="eager"
                   onLoad={() => {
                     if (containerRef.current && imageRef.current) {
-                        const containerHeight = containerRef.current.offsetHeight;
-                        const imageHeight = imageRef.current.offsetHeight;
-                        if (imageHeight > containerHeight) {
-                            const maxScrollDistance = imageHeight - containerHeight;
-                            setYRange([0, -maxScrollDistance]);
-                        }
+                      const containerHeight = containerRef.current.offsetHeight;
+                      const imageHeight = imageRef.current.offsetHeight;
+                      if (imageHeight > containerHeight) {
+                        const maxScrollDistance = imageHeight - containerHeight;
+                        setYRange([0, -maxScrollDistance]);
+                      }
                     }
                   }}
                 />
