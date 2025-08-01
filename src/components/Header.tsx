@@ -19,11 +19,13 @@ const Header = () => {
   const headerOpacity = scrollProgress;
   const headerBlur = scrollProgress * 20;
 
+  // FIX 1: Removed the hardcoded 'active' property.
+  // The active state will now be handled dynamically by NavLink.
   const navItems = [
-    { name: 'HOME', active: true, path: '/' },
-    { name: 'GALLERY', active: false, path: '/gallery' },
-    { name: 'ABOUT', active: false, path: '/about' },
-    { name: 'CONTACT', active: false, path: '/contact' },
+    { name: 'HOME', path: '/' },
+    { name: 'GALLERY', path: '/gallery' },
+    { name: 'ABOUT', path: '/about' },
+    { name: 'CONTACT', path: '/contact' },
   ];
 
   const socialIcons = [
@@ -68,16 +70,28 @@ const Header = () => {
           {/* Desktop Navigation */}
           <nav className="hidden md:flex items-center space-x-8">
             {navItems.map((item) => (
+              // FIX 2: Replaced the old NavLink implementation.
               <NavLink
                 key={item.name}
                 to={item.path}
-                className={({ isActive }) => `relative text-sm font-medium transition-all duration-300 ${isActive ? 'text-white' : 'text-gray-300 hover:text-white'}`}
+                // We add `group` to enable `group-hover` on child elements.
+                // The text color is still controlled by `isActive`.
+                className={({ isActive }) => `group relative text-sm font-medium transition-all duration-300 ${isActive ? 'text-white' : 'text-gray-300 hover:text-white'}`}
               >
-                {item.name}
-                {item.active && (
-                  <div className="absolute -bottom-1 left-0 w-full h-0.5 bg-gradient-to-r from-cyan-400 to-pink-500 rounded-full"></div>
+                {/* We use a render prop to get `isActive` for conditional rendering of children */}
+                {({ isActive }) => (
+                  <>
+                    {item.name}
+                    {/* FIX 3: Replaced the two underline divs with a single, smarter div. */}
+                    {/* This div is full-width if active, or animates from zero-width on hover if inactive. */}
+                    <div
+                      className={`
+                        absolute -bottom-1 left-0 h-0.5 bg-gradient-to-r from-cyan-400 to-pink-500 rounded-full transition-all duration-300
+                        ${isActive ? 'w-full' : 'w-0 group-hover:w-full'}
+                      `}
+                    ></div>
+                  </>
                 )}
-                <div className="absolute -bottom-1 left-0 w-0 h-0.5 bg-gradient-to-r from-cyan-400 to-pink-500 rounded-full transition-all duration-300 hover:w-full"></div>
               </NavLink>
             ))}
           </nav>
@@ -110,7 +124,7 @@ const Header = () => {
         </div>
       </div>
 
-      {/* Mobile Menu */}
+      {/* Mobile Menu (No changes needed here as it was already correct) */}
       <div className={`md:hidden transition-all duration-500 ease-out ${
         isMenuOpen 
           ? 'max-h-96 opacity-100' 

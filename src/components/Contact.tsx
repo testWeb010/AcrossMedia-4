@@ -112,7 +112,17 @@ const Contact = () => {
       const data = await response.json();
 
       if (data.success) {
-        toast.success('Message sent successfully! We will get back to you soon.');
+        toast.success('Message sent successfully! We will get back to you soon.', {
+          style: {
+            background: '#4F46E5',
+            color: '#FFFFFF',
+            border: 'none',
+            borderRadius: '8px',
+            padding: '16px',
+            boxShadow: '0 4px 6px rgba(0, 0, 0, 0.1)'
+          },
+          position: 'top-right'
+        });
         setFormData({
           name: '',
           email: '',
@@ -144,19 +154,24 @@ const Contact = () => {
           });
           
           setErrors(serverErrors);
+          toast.error(serverErrors.general || 'There are errors in your form submission. Please check the fields.');
         } else {
+          const errorMessage = data.error || 'Failed to send message. Please try again.';
           setErrors(prev => ({
             ...prev,
-            general: data.error || 'Failed to send message. Please try again.'
+            general: errorMessage
           }));
+          toast.error(errorMessage);
         }
       }
     } catch (error) {
       console.error('Contact form error:', error);
+      const errorMessage = 'Failed to send message. Please check your connection and try again.';
       setErrors(prev => ({
         ...prev,
-        general: 'Failed to send message. Please check your connection and try again.'
+        general: errorMessage
       }));
+      toast.error(errorMessage);
     } finally {
       setIsSubmitting(false);
     }
@@ -385,4 +400,3 @@ const Contact = () => {
 };
 
 export default Contact;
-

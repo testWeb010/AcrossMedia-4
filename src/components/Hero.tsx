@@ -71,20 +71,28 @@ const Hero = () => {
   return (
     <section ref={targetRef} className="relative min-h-screen bg-black overflow-hidden">
       {/* Background elements */}
-      <div className="absolute inset-0 z-0">
-        <div className="absolute top-0 left-0 w-full h-full bg-gradient-to-br from-gray-900 via-black to-gray-900"></div>
-        <div className="absolute inset-0 bg-[linear-gradient(rgba(255,255,255,0.03)_1px,transparent_1px),linear-gradient(90deg,rgba(255,255,255,0.03)_1px,transparent_1px)] bg-[size:60px_60px] opacity-50"></div>
-        
-        {/* FIX: Use the results of the hooks conditionally, not the hooks themselves */}
-        <motion.div
-          className="absolute top-1/4 left-1/4 w-72 h-72 md:w-96 md:h-96 bg-cyan-500/10 rounded-full blur-3xl"
-          style={isDesktop ? { y: yBlob1 } : {}}
-        ></motion.div>
-        <motion.div
-          className="absolute bottom-1/4 right-1/4 w-72 h-72 md:w-96 md:h-96 bg-pink-500/10 rounded-full blur-3xl"
-          style={isDesktop ? { y: yBlob2 } : {}}
-        ></motion.div>
-      </div>
+        <div className="absolute inset-0 z-0">
+<iframe
+            src="https://www.pexels.com/video/a-dark-abstract-background-3172308/embed/"
+            width="100%"
+            height="100%"
+            frameBorder="0"
+            allowFullScreen
+            className="absolute inset-0 object-cover w-full h-full opacity-30 mix-blend-overlay"
+          ></iframe>
+          <div className="absolute top-0 left-0 w-full h-full bg-gradient-to-br from-gray-900 via-black to-gray-900"></div>
+          <div className="absolute inset-0 bg-[linear-gradient(rgba(255,255,255,0.03)_1px,transparent_1px),linear-gradient(90deg,rgba(255,255,255,0.03)_1px,transparent_1px)] bg-[size:60px_60px] opacity-50"></div>
+
+          {/* FIX: Use the results of the hooks conditionally, not the hooks themselves */}
+          <motion.div
+            className="absolute top-1/4 left-1/4 w-72 h-72 md:w-96 md:h-96 bg-cyan-500/10 rounded-full blur-3xl"
+            style={isDesktop ? { y: yBlob1 } : {}}
+          ></motion.div>
+          <motion.div
+            className="absolute bottom-1/4 right-1/4 w-72 h-72 md:w-96 md:h-96 bg-pink-500/10 rounded-full blur-3xl"
+            style={isDesktop ? { y: yBlob2 } : {}}
+          ></motion.div>
+        </div>
 
       <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="grid lg:grid-cols-2 gap-12 lg:gap-16 lg:items-center min-h-screen pt-28 pb-20 lg:pt-0 lg:pb-0">
@@ -102,21 +110,21 @@ const Hero = () => {
               <span className="text-cyan-400 text-sm font-medium tracking-wider uppercase">Creative Excellence</span>
             </motion.div>
             
-            <motion.h1 variants={itemVariants} className="text-5xl md:text-6xl lg:text-7xl font-bold leading-tight">
-              <span className="bg-gradient-to-r from-white via-gray-100 to-gray-300 bg-clip-text text-transparent">
+            <motion.h1 variants={itemVariants} className="text-5xl md:text-6xl lg:text-7xl font-bold leading-tight font-serif">
+              <span className="text-white">
                 We are
               </span>
               <br />
-              <span className="bg-gradient-to-r from-cyan-400 via-pink-500 to-purple-600 bg-clip-text text-transparent">
+              <span className="text-cyan-400">
                 Across Media
               </span>
             </motion.h1>
             
-            <motion.p variants={itemVariants} className="text-lg md:text-xl text-gray-300 leading-relaxed max-w-lg mx-auto lg:mx-0">
-              We specialise in <span className="text-white font-semibold">Branded Content</span>, 
-              <span className="text-white font-semibold"> Celebrity Engagement</span>, 
-              <span className="text-white font-semibold"> Sponsorships</span>, and 
-              <span className="text-white font-semibold"> IPs</span>.
+            <motion.p variants={itemVariants} className="text-lg md:text-xl text-gray-400 leading-relaxed max-w-lg mx-auto lg:mx-0">
+              We specialise in <span className="text-cyan-200 font-semibold">Branded Content</span>, 
+              <span className="text-cyan-200 font-semibold"> Celebrity Engagement</span>, 
+              <span className="text-cyan-200 font-semibold"> Sponsorships</span>, and 
+              <span className="text-cyan-200 font-semibold"> IPs</span>.
             </motion.p>
 
             <motion.div variants={itemVariants} className="flex flex-col sm:flex-row gap-4 justify-center lg:justify-start">
