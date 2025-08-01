@@ -1,8 +1,9 @@
 import React, { useState } from 'react';
 import { Mail, Phone, MapPin, Send, MessageCircle, AlertCircle } from 'lucide-react';
-import { toast } from 'sonner';
+import { useToast } from '@/hooks/use-toast';
 
 const Contact = () => {
+  const { toast } = useToast();
   const [formData, setFormData] = useState({
     name: '',
     email: '',
@@ -112,16 +113,10 @@ const Contact = () => {
       const data = await response.json();
 
       if (data.success) {
-        toast.success('Message sent successfully! We will get back to you soon.', {
-          style: {
-            background: '#4F46E5',
-            color: '#FFFFFF',
-            border: 'none',
-            borderRadius: '8px',
-            padding: '16px',
-            boxShadow: '0 4px 6px rgba(0, 0, 0, 0.1)'
-          },
-          position: 'top-right'
+        toast({
+          title: "Success!",
+          description: "Message sent successfully! We will get back to you soon.",
+          variant: "default",
         });
         setFormData({
           name: '',
@@ -154,14 +149,22 @@ const Contact = () => {
           });
           
           setErrors(serverErrors);
-          toast.error(serverErrors.general || 'There are errors in your form submission. Please check the fields.');
+          toast({
+            title: "Validation Error",
+            description: serverErrors.general || 'There are errors in your form submission. Please check the fields.',
+            variant: "destructive",
+          });
         } else {
           const errorMessage = data.error || 'Failed to send message. Please try again.';
           setErrors(prev => ({
             ...prev,
             general: errorMessage
           }));
-          toast.error(errorMessage);
+          toast({
+            title: "Error",
+            description: errorMessage,
+            variant: "destructive",
+          });
         }
       }
     } catch (error) {
@@ -171,7 +174,11 @@ const Contact = () => {
         ...prev,
         general: errorMessage
       }));
-      toast.error(errorMessage);
+      toast({
+        title: "Connection Error",
+        description: errorMessage,
+        variant: "destructive",
+      });
     } finally {
       setIsSubmitting(false);
     }
