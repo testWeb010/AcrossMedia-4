@@ -1,10 +1,43 @@
-import React from "react";
-import { motion, Variants } from "framer-motion";
+import React, { useEffect, useRef } from "react"; // <-- Import useEffect and useRef
+import {
+  motion,
+  Variants,
+  useAnimation, // <-- Import useAnimation
+  useInView,      // <-- Import useInView
+} from "framer-motion";
 import { ArrowRight } from "lucide-react";
 
 import influencerCollage from "../assets/images/influencer-collage.png";
 
 const InfluencerShowcase = () => {
+  // --- Animation Hooks for the Image Collage ---
+  const ref = useRef(null); // Create a ref for the element to track
+  const isInView = useInView(ref, { once: false, amount: 0.2 }); // Track when the ref is in view
+  const animationControls = useAnimation(); // Get animation controls
+
+  // Use useEffect to start/stop the animation based on visibility
+  useEffect(() => {
+    if (isInView) {
+      // Start the repeating animation when in view
+      animationControls.start({
+        y: ["0%", "-50%"], // Animate from original position to 50% up
+        transition: {
+          y: {
+            duration: 40,
+            repeat: Infinity,
+            repeatType: "reverse", // This creates the "ping-pong" effect
+            ease: "easeInOut",
+          },
+        },
+      });
+    } else {
+      // Stop the animation when not in view
+      animationControls.stop();
+    }
+  }, [isInView, animationControls]);
+
+
+  // Variants for the text content (no changes here)
   const containerVariants: Variants = {
     hidden: { opacity: 0 },
     visible: {
@@ -72,18 +105,24 @@ const InfluencerShowcase = () => {
             </motion.div>
           </motion.div>
 
-          {/* --- Right Column: Animated Image Collage (UPDATED FOR PERFORMANCE) --- */}
-          <div className="relative h-[65vh] max-h-[650px] w-full max-w-sm mx-auto lg:max-w-none">
-            {/* This div is the mask */}
+          {/* --- Right Column: Animated Image Collage (FIXED WITH FRAMER MOTION) --- */}
+          <div
+            ref={ref} // Attach the ref here to the parent masking div
+            className="relative h-[65vh] max-h-[650px] w-full max-w-sm mx-auto lg:max-w-none"
+          >
             <div className="absolute inset-0 rounded-3xl overflow-hidden [mask-image:linear-gradient(to_bottom,white,white,transparent)]">
-              {/* This new wrapper div is what gets animated */}
-              <div className="w-full h-auto animate-scroll-smooth-ping-pong">
+              {/* This div is now a motion.div controlled by our hooks */}
+              <motion.div
+                className="w-full h-auto"
+                animate={animationControls} // Link the animation controls
+              >
                 <img
                   src={influencerCollage}
                   alt="Collage of top influencers and celebrities we work with"
                   className="w-full h-auto"
+                  loading="lazy"
                 />
-              </div>
+              </motion.div>
 
               <div className="absolute inset-0 rounded-3xl ring-1 ring-inset ring-white/10"></div>
             </div>

@@ -314,16 +314,3 @@ body {
 }
 
 
-/* --- Influencer-showcase animation --- */
-@keyframes scroll-smooth {
-  from {
-    transform: translateY(0);
-  }
-  to {
-    transform: translateY(calc(-100% + 65vh));
-  }
-}
-
-.animate-scroll-smooth-ping-pong {
-  animation: scroll-smooth 40s ease-in-out infinite alternate;
-}
